@@ -18,55 +18,55 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
-			"itemDesc": "VlMPOq_itemDesc",
-			"backdrop": "VlMPOq_backdrop",
-			"itemName": "VlMPOq_itemName",
-			"footer": "VlMPOq_footer",
-			"footerTip": "VlMPOq_footerTip",
-			"cardList": "VlMPOq_cardList",
-			"tabBtn": "VlMPOq_tabBtn",
-			"itemCardDisabled": "VlMPOq_itemCardDisabled",
-			"modal": "VlMPOq_modal",
-			"inputBtnActive": "VlMPOq_inputBtnActive",
-			"tabs": "VlMPOq_tabs",
 			"itemExtra": "VlMPOq_itemExtra",
-			"titleArea": "VlMPOq_titleArea",
-			"switchTrackChecked": "VlMPOq_switchTrackChecked",
-			"searchInput": "VlMPOq_searchInput",
-			"tabBtnActive": "VlMPOq_tabBtnActive",
-			"title": "VlMPOq_title",
-			"sectionSubtitle": "VlMPOq_sectionSubtitle",
-			"itemInfo": "VlMPOq_itemInfo",
-			"badgeGlobal": "VlMPOq_badgeGlobal",
-			"content": "VlMPOq_content",
-			"section": "VlMPOq_section",
-			"badgeMcp": "VlMPOq_badgeMcp",
-			"itemAction": "VlMPOq_itemAction",
-			"fadeIn": "VlMPOq_fadeIn",
 			"switchThumb": "VlMPOq_switchThumb",
+			"badgeGlobal": "VlMPOq_badgeGlobal",
+			"titleArea": "VlMPOq_titleArea",
+			"backdrop": "VlMPOq_backdrop",
+			"switchTrackChecked": "VlMPOq_switchTrackChecked",
+			"switchThumbChecked": "VlMPOq_switchThumbChecked",
+			"sectionHeader": "VlMPOq_sectionHeader",
+			"closeBtn": "VlMPOq_closeBtn",
+			"content": "VlMPOq_content",
+			"itemAction": "VlMPOq_itemAction",
+			"inputBtn": "VlMPOq_inputBtn",
+			"header": "VlMPOq_header",
+			"filterBar": "VlMPOq_filterBar",
+			"cardList": "VlMPOq_cardList",
+			"itemName": "VlMPOq_itemName",
+			"badgeMcp": "VlMPOq_badgeMcp",
+			"sectionSubtitle": "VlMPOq_sectionSubtitle",
+			"iconBtn": "VlMPOq_iconBtn",
 			"loadingSpinner": "VlMPOq_loadingSpinner",
 			"subtitle": "VlMPOq_subtitle",
-			"switchThumbChecked": "VlMPOq_switchThumbChecked",
+			"slideUp": "VlMPOq_slideUp",
+			"headerActions": "VlMPOq_headerActions",
+			"tabs": "VlMPOq_tabs",
+			"itemBadge": "VlMPOq_itemBadge",
+			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
+			"itemInfo": "VlMPOq_itemInfo",
+			"sectionTitle": "VlMPOq_sectionTitle",
+			"badgeActive": "VlMPOq_badgeActive",
+			"badgeInactive": "VlMPOq_badgeInactive",
+			"titleRow": "VlMPOq_titleRow",
 			"spin": "VlMPOq_spin",
 			"emptyState": "VlMPOq_emptyState",
-			"badgeInactive": "VlMPOq_badgeInactive",
-			"closeBtn": "VlMPOq_closeBtn",
-			"sectionTitle": "VlMPOq_sectionTitle",
-			"itemBadge": "VlMPOq_itemBadge",
-			"sectionHeader": "VlMPOq_sectionHeader",
-			"switchTrack": "VlMPOq_switchTrack",
-			"iconBtn": "VlMPOq_iconBtn",
-			"badgeActive": "VlMPOq_badgeActive",
-			"inputBtn": "VlMPOq_inputBtn",
-			"itemTitleRow": "VlMPOq_itemTitleRow",
-			"headerActions": "VlMPOq_headerActions",
-			"header": "VlMPOq_header",
 			"badgeProject": "VlMPOq_badgeProject",
+			"footer": "VlMPOq_footer",
+			"itemCardDisabled": "VlMPOq_itemCardDisabled",
+			"section": "VlMPOq_section",
+			"inputBtnActive": "VlMPOq_inputBtnActive",
+			"switchTrack": "VlMPOq_switchTrack",
+			"searchInput": "VlMPOq_searchInput",
+			"footerTip": "VlMPOq_footerTip",
+			"itemTitleRow": "VlMPOq_itemTitleRow",
+			"tabBtn": "VlMPOq_tabBtn",
 			"itemCard": "VlMPOq_itemCard",
-			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
-			"filterBar": "VlMPOq_filterBar",
-			"titleRow": "VlMPOq_titleRow",
-			"slideUp": "VlMPOq_slideUp"
+			"fadeIn": "VlMPOq_fadeIn",
+			"title": "VlMPOq_title",
+			"itemDesc": "VlMPOq_itemDesc",
+			"tabBtnActive": "VlMPOq_tabBtnActive",
+			"modal": "VlMPOq_modal"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -628,7 +628,9 @@ window.__ModuleLoader__.load({
 		//#region src/client/index.ts
 		const inject = ["slots", "connection"];
 		function apply(ctx) {
-			ctx.slots.register({
+			const slots = ctx.slots ?? ctx.get("slots");
+			if (!slots) return;
+			slots.inject("conversation.input.right", () => slots.register({
 				name: "conversation.input.right",
 				id: "mcp-skill-manager-button",
 				order: 0,
@@ -638,7 +640,7 @@ window.__ModuleLoader__.load({
 						rpc: (ctx.connection ?? ctx.get("connection"))?.rpc
 					};
 				}
-			}, McpSkillButton);
+			}, McpSkillButton));
 		}
 		//#endregion
 		exports.apply = apply;
