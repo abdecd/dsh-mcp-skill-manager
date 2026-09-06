@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from 'react'
-import { McpSkillModal } from './McpSkillModal.tsx'
+import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { McpSkillPopover } from './McpSkillPopover.tsx'
 
 export interface McpSkillButtonProps {
   rpc?: any
@@ -10,9 +10,32 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [tooltipVisible, setTooltipVisible] = useState(false)
+  const rootRef = useRef<HTMLSpanElement>(null)
+
+  // Close when clicking outside or pressing Escape (just like ModelSelect)
+  useEffect(() => {
+    if (!open) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open])
 
   return (
     <span
+      ref={rootRef}
       onMouseEnter={() => {
         setHovered(true)
         setTooltipVisible(true)
@@ -34,8 +57,10 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
     >
       <button
         type="button"
-        title="MCP & Skill 管理"
-        aria-label="MCP & Skill 管理"
+        title="MCP & Skills 管理"
+        aria-label="MCP & Skills 管理"
+        aria-haspopup="true"
+        aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
         style={{
           display: 'inline-flex',
@@ -60,7 +85,7 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
           transition: 'all 0.15s ease',
         }}
       >
-        {/* Modern 4-block / puzzle icon for MCP & Skills */}
+        {/* 4-block / tools icon */}
         <svg
           width="16"
           height="16"
@@ -99,12 +124,13 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
             pointerEvents: 'none',
           }}
         >
-          MCP & Skill 管理
+          MCP & Skills 管理
         </span>
       )}
 
+      {/* ModelSelect-style anchored popover menu */}
       {open && (
-        <McpSkillModal
+        <McpSkillPopover
           rpc={rpc}
           sessionId={sessionId}
           onClose={() => setOpen(false)}

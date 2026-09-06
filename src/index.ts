@@ -61,7 +61,7 @@ async function scanDirectory(
   try {
     const entries = await fs.promises.readdir(dirPath, { withFileTypes: true })
     for (const entry of entries) {
-      if (entry.name === '.system' || entry.name === 'skill-disable' || entry.name === '.git') continue
+      if (entry.name === '.system' || entry.name === 'skills-disable' || entry.name === 'skill-disable' || entry.name === '.git') continue
 
       if (entry.isDirectory()) {
         const skillMdPath = path.join(dirPath, entry.name, 'SKILL.md')
@@ -134,12 +134,14 @@ async function collectSkillsForParent(
   source: SkillSource,
 ): Promise<SkillItem[]> {
   const activeDir = path.join(parentDir, 'skills')
-  const disabledDir = path.join(parentDir, 'skill-disable')
-  const nestedDisabledDir = path.join(parentDir, 'skills', 'skill-disable')
+  const disabledDir = path.join(parentDir, 'skills-disable')
+  const legacyDisabledDir = path.join(parentDir, 'skill-disable')
+  const nestedDisabledDir = path.join(parentDir, 'skills', 'skills-disable')
 
-  const [activeItems, disabledItems, nestedDisabledItems] = await Promise.all([
+  const [activeItems, disabledItems, legacyDisabledItems, nestedDisabledItems] = await Promise.all([
     scanDirectory(activeDir, true, scope, source, parentDir),
     scanDirectory(disabledDir, false, scope, source, parentDir),
+    scanDirectory(legacyDisabledDir, false, scope, source, parentDir),
     scanDirectory(nestedDisabledDir, false, scope, source, parentDir),
   ])
 
@@ -147,6 +149,9 @@ async function collectSkillsForParent(
   const map = new Map<string, SkillItem>()
   for (const item of activeItems) map.set(item.filename, item)
   for (const item of disabledItems) {
+    if (!map.has(item.filename)) map.set(item.filename, item)
+  }
+  for (const item of legacyDisabledItems) {
     if (!map.has(item.filename)) map.set(item.filename, item)
   }
   for (const item of nestedDisabledItems) {
@@ -259,9 +264,9 @@ async function toggleMcp(cordisPatchPath: string, payload: ToggleMcpPayload): Pr
   throw new Error(`MCP server not found in cordis.patch.yml: ${payload.id || payload.serverName}`)
 }
 
-/** Move a skill between skills and skill-disable */
+/** Move a skill between skills and skills-disable */
 async function toggleSkill(payload: ToggleSkillPayload): Promise<{ newPath: string; enabled: boolean }> {
-  const targetDirName = payload.enabled ? 'skills' : 'skill-disable'
+  const targetDirName = payload.enabled ? 'skills' : 'skills-disable'
   const targetDir = path.join(payload.parentDir, targetDirName)
   await fs.promises.mkdir(targetDir, { recursive: true })
   const targetPath = path.join(targetDir, payload.filename)

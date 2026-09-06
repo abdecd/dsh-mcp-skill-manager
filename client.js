@@ -5,10 +5,9 @@ window.__ModuleLoader__.load({
 		var exports = module.exports;
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 		let react = require("react");
-		let react_dom = require("react-dom");
 		let react_jsx_runtime = require("react/jsx-runtime");
 		//#region \0dsh-css:/run/media/user1/78E6859DE6855BEE/code/js/dsh-mcp-skill-manager/src/client/McpSkillManager.module.css.mjs
-		const css = ".VlMPOq_inputBtn{background:var(--dsw-specific-selector,#ffffff14);width:28px;height:28px;color:var(--dsw-alias-label-primary,#e2e8f0);cursor:pointer;border:1px solid var(--dsw-alias-border-l2,#ffffff1f);border-radius:999px;outline:none;flex:none;justify-content:center;align-items:center;padding:0;transition:all .15s;display:flex;position:relative}.VlMPOq_inputBtn:hover{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff29);border-color:var(--dsw-alias-border-l3,#ffffff3d);color:#fff;transform:translateY(-1px)}.VlMPOq_inputBtn:active{transform:translateY(0)}.VlMPOq_inputBtnActive{background:var(--dsw-alias-state-business-primary,#3b82f6)!important;color:#fff!important;border-color:#0000!important}.VlMPOq_backdrop{backdrop-filter:blur(6px);z-index:99999;background:#000000a6;justify-content:center;align-items:center;padding:20px;animation:.15s cubic-bezier(.16,1,.3,1) VlMPOq_fadeIn;display:flex;position:fixed;inset:0}@keyframes VlMPOq_fadeIn{0%{opacity:0}to{opacity:1}}.VlMPOq_modal{box-sizing:border-box;background:var(--dsw-specific-input-major,#1e1e24);width:680px;max-width:95vw;max-height:86vh;color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l2,#ffffff24);box-shadow:var(--dsw-elevation-soft,0 16px 40px #00000080);border-radius:16px;flex-direction:column;animation:.18s cubic-bezier(.16,1,.3,1) VlMPOq_slideUp;display:flex;overflow:hidden}@keyframes VlMPOq_slideUp{0%{opacity:0;transform:translateY(12px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);justify-content:space-between;align-items:center;padding:16px 20px;display:flex}.VlMPOq_titleArea{flex-direction:column;gap:3px;display:flex}.VlMPOq_titleRow{align-items:center;gap:8px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,#fff);margin:0;font-size:16px;font-weight:600}.VlMPOq_subtitle{color:var(--dsw-alias-label-secondary,#94a3b8);margin:0;font-size:12px}.VlMPOq_headerActions{align-items:center;gap:8px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:8px;justify-content:center;align-items:center;width:30px;height:30px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;display:flex}.VlMPOq_searchInput{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);color:var(--dsw-alias-label-primary,#fff);border-radius:8px;outline:none;flex:1;padding:6px 12px;font-size:13px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:8px;gap:2px;padding:3px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:#fff!important}.VlMPOq_content{flex-direction:column;flex:1;gap:20px;padding:16px 20px;display:flex;overflow-y:auto}.VlMPOq_content::-webkit-scrollbar{width:6px}.VlMPOq_content::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_content::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_section{flex-direction:column;gap:10px;display:flex}.VlMPOq_sectionHeader{justify-content:space-between;align-items:center;padding-bottom:4px;display:flex}.VlMPOq_sectionTitle{letter-spacing:.5px;text-transform:uppercase;color:var(--dsw-alias-label-secondary,#94a3b8);align-items:center;gap:6px;font-size:13px;font-weight:700;display:flex}.VlMPOq_sectionSubtitle{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;max-width:320px;font-family:monospace;font-size:11px;overflow:hidden}.VlMPOq_cardList{flex-direction:column;gap:8px;display:flex}.VlMPOq_itemCard{background:var(--dsw-alias-bg-secondary,#ffffff08);border:1px solid var(--dsw-alias-border-l2,#ffffff14);border-radius:10px;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{border-color:var(--dsw-alias-border-l3,#ffffff29);background:var(--dsw-alias-interactive-bg-hover,#ffffff0d)}.VlMPOq_itemCardDisabled{opacity:.65;background:#ffffff03}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;gap:3px;min-width:0;display:flex}.VlMPOq_itemTitleRow{flex-wrap:wrap;align-items:center;gap:8px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,#fff);font-size:14px;font-weight:600}.VlMPOq_itemBadge{border-radius:4px;padding:1px 6px;font-size:11px;font-weight:500;line-height:16px}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f626;border:1px solid #3b82f64d}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f726;border:1px solid #a855f74d}.VlMPOq_badgeMcp{color:#fbbf24;background:#f59e0b26;border:1px solid #f59e0b4d}.VlMPOq_badgeActive{color:#4ade80;background:#22c55e26}.VlMPOq_badgeInactive{color:#94a3b8;background:#94a3b826}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:12px;line-height:18px;display:-webkit-box;overflow:hidden}.VlMPOq_itemExtra{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:11px;overflow:hidden}.VlMPOq_itemAction{flex:none;align-items:center;gap:10px;display:flex}.VlMPOq_switchTrack{cursor:pointer;background:#ffffff2e;border:1px solid #0000;border-radius:999px;width:40px;height:22px;transition:background-color .2s cubic-bezier(.16,1,.3,1);position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;width:16px;height:16px;transition:transform .2s cubic-bezier(.16,1,.3,1);position:absolute;top:2px;left:3px;box-shadow:0 1px 3px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(18px)}.VlMPOq_loadingSpinner{border:2px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:12px;height:12px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{border:1px dashed var(--dsw-alias-border-l2,#ffffff1a);text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);border-radius:10px;padding:16px;font-size:13px}.VlMPOq_footer{border-top:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);color:var(--dsw-alias-label-secondary,#94a3b8);justify-content:space-between;align-items:center;padding:12px 20px;font-size:12px;display:flex}.VlMPOq_footerTip{color:var(--dsw-alias-label-tertiary,#64748b);align-items:center;gap:6px;max-width:480px;display:flex}.VlMPOq_closeBtn{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff1a);color:var(--dsw-alias-label-primary,#fff);cursor:pointer;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:500;transition:all .12s}.VlMPOq_closeBtn:hover{background:#ffffff29}";
+		const css = ".VlMPOq_popoverMenu{background:var(--dsw-specific-menu,#1e1e24);width:380px;max-width:min(420px,92vw);max-height:min(480px,75vh);color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l1,#ffffff1f);box-shadow:var(--dsw-elevation-prominent,0 16px 36px #00000080);z-index:1000;box-sizing:border-box;border-radius:18px;flex-direction:column;animation:.12s cubic-bezier(.16,1,.3,1) VlMPOq_popoverFadeIn;display:flex;position:absolute;bottom:calc(100% + 8px);right:0;overflow:hidden}@keyframes VlMPOq_popoverFadeIn{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);flex:none;justify-content:space-between;align-items:center;padding:10px 14px 8px;display:flex}.VlMPOq_titleArea{align-items:center;gap:6px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,#fff);margin:0;font-size:13px;font-weight:600}.VlMPOq_headerActions{align-items:center;gap:4px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;width:24px;height:24px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);flex-direction:column;flex:none;gap:8px;padding:8px 12px;display:flex}.VlMPOq_searchInput{box-sizing:border-box;background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);width:100%;color:var(--dsw-alias-label-primary,#fff);border-radius:8px;outline:none;padding:5px 10px;font-size:12px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:6px;gap:2px;padding:2px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;text-align:center;background:0 0;border:none;border-radius:5px;flex:1;padding:3px 6px;font-size:11px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:#fff!important}.VlMPOq_groups{flex-direction:column;flex:1;gap:12px;min-height:0;padding:4px 6px;display:flex;overflow-y:auto}.VlMPOq_groups::-webkit-scrollbar{width:5px}.VlMPOq_groups::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_groups::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_groupTitle{z-index:2;background:var(--dsw-specific-menu,#1e1e24);color:var(--dsw-alias-label-tertiary,#94a3b8);letter-spacing:.3px;justify-content:space-between;align-items:center;padding:4px 6px 2px;font-size:11px;font-weight:600;line-height:16px;display:flex;position:sticky;top:0}.VlMPOq_groupSubtitle{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;max-width:180px;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_cardList{flex-direction:column;gap:4px;display:flex}.VlMPOq_itemCard{box-sizing:border-box;background:0 0;border:1px solid #0000;border-radius:8px;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:6px 8px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff0d);border-color:var(--dsw-alias-border-l2,#ffffff14)}.VlMPOq_itemCardDisabled{opacity:.6}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;gap:2px;min-width:0;display:flex}.VlMPOq_itemTitleRow{flex-wrap:wrap;align-items:center;gap:6px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,#fff);text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:500;overflow:hidden}.VlMPOq_itemBadge{border-radius:4px;padding:0 5px;font-size:10px;font-weight:500;line-height:15px}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f626}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f726}.VlMPOq_badgeMcp{color:#fbbf24;background:#f59e0b26}.VlMPOq_badgeActive{color:#4ade80;background:#22c55e26}.VlMPOq_badgeInactive{color:#94a3b8;background:#94a3b826}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:15px;overflow:hidden}.VlMPOq_itemExtra{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_itemAction{flex:none;align-items:center;display:flex}.VlMPOq_switchTrack{cursor:pointer;background:#ffffff2e;border:1px solid #0000;border-radius:999px;width:34px;height:18px;transition:background-color .2s cubic-bezier(.16,1,.3,1);position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;width:14px;height:14px;transition:transform .2s cubic-bezier(.16,1,.3,1);position:absolute;top:1px;left:2px;box-shadow:0 1px 2px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(16px)}.VlMPOq_loadingSpinner{border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:10px;height:10px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);padding:10px;font-size:12px}.VlMPOq_footer{border-top:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);color:var(--dsw-alias-label-tertiary,#64748b);flex:none;justify-content:space-between;align-items:center;padding:8px 12px;font-size:11px;display:flex}.VlMPOq_footerTip{text-overflow:ellipsis;white-space:nowrap;align-items:center;gap:4px;display:flex;overflow:hidden}";
 		const tagId = "dsh-mcp-skill-manager/McpSkillManager.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
 			const tag = document.createElement("style");
@@ -18,55 +17,46 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
-			"badgeGlobal": "VlMPOq_badgeGlobal",
-			"switchTrack": "VlMPOq_switchTrack",
-			"titleRow": "VlMPOq_titleRow",
-			"inputBtnActive": "VlMPOq_inputBtnActive",
-			"footerTip": "VlMPOq_footerTip",
-			"closeBtn": "VlMPOq_closeBtn",
-			"titleArea": "VlMPOq_titleArea",
-			"itemBadge": "VlMPOq_itemBadge",
-			"spin": "VlMPOq_spin",
-			"itemDesc": "VlMPOq_itemDesc",
-			"backdrop": "VlMPOq_backdrop",
-			"slideUp": "VlMPOq_slideUp",
-			"sectionTitle": "VlMPOq_sectionTitle",
-			"itemName": "VlMPOq_itemName",
-			"badgeActive": "VlMPOq_badgeActive",
-			"badgeInactive": "VlMPOq_badgeInactive",
 			"cardList": "VlMPOq_cardList",
-			"badgeMcp": "VlMPOq_badgeMcp",
-			"tabBtn": "VlMPOq_tabBtn",
-			"searchInput": "VlMPOq_searchInput",
-			"itemAction": "VlMPOq_itemAction",
-			"fadeIn": "VlMPOq_fadeIn",
-			"filterBar": "VlMPOq_filterBar",
-			"itemCard": "VlMPOq_itemCard",
-			"header": "VlMPOq_header",
-			"headerActions": "VlMPOq_headerActions",
-			"section": "VlMPOq_section",
-			"switchThumbChecked": "VlMPOq_switchThumbChecked",
-			"badgeProject": "VlMPOq_badgeProject",
-			"emptyState": "VlMPOq_emptyState",
-			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
+			"badgeActive": "VlMPOq_badgeActive",
 			"iconBtn": "VlMPOq_iconBtn",
+			"header": "VlMPOq_header",
+			"tabs": "VlMPOq_tabs",
+			"itemInfo": "VlMPOq_itemInfo",
+			"itemBadge": "VlMPOq_itemBadge",
+			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
+			"titleArea": "VlMPOq_titleArea",
+			"footerTip": "VlMPOq_footerTip",
+			"badgeProject": "VlMPOq_badgeProject",
+			"badgeGlobal": "VlMPOq_badgeGlobal",
+			"badgeInactive": "VlMPOq_badgeInactive",
+			"groupTitle": "VlMPOq_groupTitle",
+			"tabBtnActive": "VlMPOq_tabBtnActive",
+			"popoverMenu": "VlMPOq_popoverMenu",
+			"groups": "VlMPOq_groups",
+			"switchTrack": "VlMPOq_switchTrack",
+			"itemDesc": "VlMPOq_itemDesc",
+			"itemName": "VlMPOq_itemName",
+			"spin": "VlMPOq_spin",
 			"title": "VlMPOq_title",
-			"inputBtn": "VlMPOq_inputBtn",
-			"content": "VlMPOq_content",
+			"footer": "VlMPOq_footer",
 			"switchTrackChecked": "VlMPOq_switchTrackChecked",
-			"loadingSpinner": "VlMPOq_loadingSpinner",
+			"itemCard": "VlMPOq_itemCard",
+			"switchThumbChecked": "VlMPOq_switchThumbChecked",
 			"switchThumb": "VlMPOq_switchThumb",
+			"searchInput": "VlMPOq_searchInput",
+			"headerActions": "VlMPOq_headerActions",
+			"loadingSpinner": "VlMPOq_loadingSpinner",
 			"itemTitleRow": "VlMPOq_itemTitleRow",
 			"itemExtra": "VlMPOq_itemExtra",
-			"footer": "VlMPOq_footer",
-			"sectionSubtitle": "VlMPOq_sectionSubtitle",
-			"subtitle": "VlMPOq_subtitle",
-			"sectionHeader": "VlMPOq_sectionHeader",
-			"modal": "VlMPOq_modal",
-			"tabBtnActive": "VlMPOq_tabBtnActive",
-			"itemCardDisabled": "VlMPOq_itemCardDisabled",
-			"tabs": "VlMPOq_tabs",
-			"itemInfo": "VlMPOq_itemInfo"
+			"tabBtn": "VlMPOq_tabBtn",
+			"groupSubtitle": "VlMPOq_groupSubtitle",
+			"filterBar": "VlMPOq_filterBar",
+			"popoverFadeIn": "VlMPOq_popoverFadeIn",
+			"itemAction": "VlMPOq_itemAction",
+			"emptyState": "VlMPOq_emptyState",
+			"badgeMcp": "VlMPOq_badgeMcp",
+			"itemCardDisabled": "VlMPOq_itemCardDisabled"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -114,8 +104,8 @@ window.__ModuleLoader__.load({
 			});
 		}
 		//#endregion
-		//#region src/client/McpSkillModal.tsx
-		function McpSkillModal({ rpc, sessionId, onClose }) {
+		//#region src/client/McpSkillPopover.tsx
+		function McpSkillPopover({ rpc, sessionId, onClose }) {
 			const [data, setData] = (0, react.useState)(null);
 			const [loading, setLoading] = (0, react.useState)(true);
 			const [error, setError] = (0, react.useState)(null);
@@ -139,13 +129,6 @@ window.__ModuleLoader__.load({
 			(0, react.useEffect)(() => {
 				loadData();
 			}, [sessionId]);
-			(0, react.useEffect)(() => {
-				const handleKeyDown = (e) => {
-					if (e.key === "Escape") onClose();
-				};
-				window.addEventListener("keydown", handleKeyDown);
-				return () => window.removeEventListener("keydown", handleKeyDown);
-			}, [onClose]);
 			const handleToggleSkill = async (skill) => {
 				if (togglingIds.has(skill.id)) return;
 				setTogglingIds((prev) => new Set(prev).add(skill.id));
@@ -229,342 +212,296 @@ window.__ModuleLoader__.load({
 			const projectCount = data ? data.projectSkills.length : 0;
 			const globalSkillCount = data ? data.globalSkills.length : 0;
 			const globalMcpCount = data ? data.globalMcps.length : 0;
-			const modalContent = /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-				className: McpSkillManager_module_css_default.backdrop,
-				onClick: onClose,
-				children: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-					className: McpSkillManager_module_css_default.modal,
-					onClick: (e) => e.stopPropagation(),
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: McpSkillManager_module_css_default.header,
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.titleArea,
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-									className: McpSkillManager_module_css_default.titleRow,
-									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", {
-										className: McpSkillManager_module_css_default.title,
-										children: "MCP & Skill 管理"
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: McpSkillManager_module_css_default.popoverMenu,
+				onClick: (e) => e.stopPropagation(),
+				onMouseDown: (e) => e.stopPropagation(),
+				children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: McpSkillManager_module_css_default.header,
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							className: McpSkillManager_module_css_default.titleArea,
+							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", {
+								className: McpSkillManager_module_css_default.title,
+								children: "MCP & Skills 管理"
+							})
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: McpSkillManager_module_css_default.headerActions,
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+								type: "button",
+								className: McpSkillManager_module_css_default.iconBtn,
+								onClick: loadData,
+								title: "刷新列表",
+								"aria-label": "刷新列表",
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+									width: "13",
+									height: "13",
+									viewBox: "0 0 16 16",
+									fill: "none",
+									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+										d: "M13.65 2.35A7.95 7.95 0 0 0 8 0C3.58 0 0 3.58 0 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 8 14c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L9 7h7V0l-2.35 2.35z",
+										fill: "currentColor"
 									})
-								}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-									className: McpSkillManager_module_css_default.subtitle,
-									children: "先显示项目级，再显示全局级 · 开关即时激活与停用"
-								})]
-							}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.headerActions,
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-									type: "button",
-									className: McpSkillManager_module_css_default.iconBtn,
-									onClick: loadData,
-									title: "刷新列表",
-									"aria-label": "刷新列表",
-									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
-										width: "15",
-										height: "15",
-										viewBox: "0 0 16 16",
-										fill: "none",
-										children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
-											d: "M13.65 2.35A7.95 7.95 0 0 0 8 0C3.58 0 0 3.58 0 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 8 14c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L9 7h7V0l-2.35 2.35z",
-											fill: "currentColor"
-										})
-									})
-								}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-									type: "button",
-									className: McpSkillManager_module_css_default.iconBtn,
-									onClick: onClose,
-									title: "关闭",
-									"aria-label": "关闭",
-									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
-										width: "15",
-										height: "15",
-										viewBox: "0 0 16 16",
-										fill: "none",
-										children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
-											d: "M3.5 3.5L12.5 12.5M12.5 3.5L3.5 12.5",
-											stroke: "currentColor",
-											strokeWidth: "1.5",
-											strokeLinecap: "round"
-										})
-									})
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: McpSkillManager_module_css_default.filterBar,
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("input", {
-								type: "text",
-								className: McpSkillManager_module_css_default.searchInput,
-								placeholder: "搜索技能或 MCP 服务名称、描述...",
-								value: searchQuery,
-								onChange: (e) => setSearchQuery(e.target.value)
-							}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.tabs,
-								children: [
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-										type: "button",
-										className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "all" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
-										onClick: () => setActiveTab("all"),
-										children: [
-											"全部 (",
-											projectCount + globalSkillCount + globalMcpCount,
-											")"
-										]
-									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-										type: "button",
-										className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "project" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
-										onClick: () => setActiveTab("project"),
-										children: [
-											"项目级 (",
-											projectCount,
-											")"
-										]
-									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-										type: "button",
-										className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "global" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
-										onClick: () => setActiveTab("global"),
-										children: [
-											"全局级 (",
-											globalSkillCount + globalMcpCount,
-											")"
-										]
-									})
-								]
-							})]
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-							className: McpSkillManager_module_css_default.content,
-							children: loading && !data ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-								className: McpSkillManager_module_css_default.emptyState,
-								children: "正在加载 MCP 和 Skill 列表..."
-							}) : error ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.emptyState,
-								style: { color: "#ef4444" },
-								children: ["加载失败: ", error]
-							}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [(activeTab === "all" || activeTab === "project") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.section,
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-									className: McpSkillManager_module_css_default.sectionHeader,
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-										className: McpSkillManager_module_css_default.sectionTitle,
-										children: "📁 项目级技能 (Project Skills)"
-									}), data?.projectRoot && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-										className: McpSkillManager_module_css_default.sectionSubtitle,
-										title: data.projectRoot,
-										children: ["项目: ", data.projectRoot]
-									})]
-								}), filteredProjectSkills.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-									className: McpSkillManager_module_css_default.emptyState,
-									children: "当前项目目录下未发现技能 (支持 .agents/skills 或 .dsh/skills)"
-								}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-									className: McpSkillManager_module_css_default.cardList,
-									children: filteredProjectSkills.map((skill) => {
-										const isToggling = togglingIds.has(skill.id);
-										return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-											className: `${McpSkillManager_module_css_default.itemCard} ${!skill.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
-											children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-												className: McpSkillManager_module_css_default.itemInfo,
-												children: [
-													/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-														className: McpSkillManager_module_css_default.itemTitleRow,
-														children: [
-															/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																className: McpSkillManager_module_css_default.itemName,
-																children: skill.name
-															}),
-															/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeProject}`,
-																children: "项目级"
-															}),
-															/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																className: `${McpSkillManager_module_css_default.itemBadge} ${skill.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
-																children: skill.enabled ? "已激活" : "已停用"
-															})
-														]
-													}),
-													skill.description ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-														className: McpSkillManager_module_css_default.itemDesc,
-														children: skill.description
-													}) : null,
-													/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-														className: McpSkillManager_module_css_default.itemExtra,
-														children: ["路径: ", skill.path]
-													})
-												]
-											}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-												className: McpSkillManager_module_css_default.itemAction,
-												children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
-													checked: skill.enabled,
-													loading: isToggling,
-													disabled: isToggling,
-													ariaLabel: `切换技能 ${skill.name}`,
-													onChange: () => handleToggleSkill(skill)
-												})
-											})]
-										}, skill.id);
-									})
-								})]
-							}), (activeTab === "all" || activeTab === "global") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: McpSkillManager_module_css_default.section,
-								children: [
-									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-										className: McpSkillManager_module_css_default.sectionHeader,
-										children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											className: McpSkillManager_module_css_default.sectionTitle,
-											children: "🌐 全局级 (Global Level)"
-										})
-									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-										style: { marginTop: "4px" },
-										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											style: {
-												fontSize: "12px",
-												fontWeight: 600,
-												color: "var(--dsw-alias-label-secondary, #94a3b8)",
-												marginBottom: "8px",
-												display: "flex",
-												alignItems: "center",
-												gap: "6px"
-											},
-											children: "🔌 全局 MCP 服务 (~/.dsh/cordis.patch.yml)"
-										}), filteredGlobalMcps.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											className: McpSkillManager_module_css_default.emptyState,
-											children: "~/.dsh/cordis.patch.yml 中未找到 MCP 配置"
-										}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											className: McpSkillManager_module_css_default.cardList,
-											children: filteredGlobalMcps.map((mcp) => {
-												const isToggling = togglingIds.has(mcp.id);
-												return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-													className: `${McpSkillManager_module_css_default.itemCard} ${!mcp.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
-													children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-														className: McpSkillManager_module_css_default.itemInfo,
-														children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-															className: McpSkillManager_module_css_default.itemTitleRow,
-															children: [
-																/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																	className: McpSkillManager_module_css_default.itemName,
-																	children: mcp.serverName
-																}),
-																/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																	className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeMcp}`,
-																	children: "全局 MCP"
-																}),
-																/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																	className: `${McpSkillManager_module_css_default.itemBadge} ${mcp.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
-																	children: mcp.enabled ? "已激活" : "已停用"
-																})
-															]
-														}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-															className: McpSkillManager_module_css_default.itemExtra,
-															children: [
-																"ID: ",
-																mcp.id,
-																" · 传输: ",
-																mcp.transport,
-																mcp.command ? ` · 命令: ${mcp.command} ${(mcp.args || []).join(" ")}` : "",
-																mcp.url ? ` · URL: ${mcp.url}` : ""
-															]
-														})]
-													}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-														className: McpSkillManager_module_css_default.itemAction,
-														children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
-															checked: mcp.enabled,
-															loading: isToggling,
-															disabled: isToggling,
-															ariaLabel: `切换 MCP ${mcp.serverName}`,
-															onChange: () => handleToggleMcp(mcp)
-														})
-													})]
-												}, mcp.id);
-											})
-										})]
-									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-										style: { marginTop: "16px" },
-										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											style: {
-												fontSize: "12px",
-												fontWeight: 600,
-												color: "var(--dsw-alias-label-secondary, #94a3b8)",
-												marginBottom: "8px",
-												display: "flex",
-												alignItems: "center",
-												gap: "6px"
-											},
-											children: "⚡ 全局技能 (~/.agents/skills 或 ~/.dsh/skills)"
-										}), filteredGlobalSkills.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											className: McpSkillManager_module_css_default.emptyState,
-											children: "未找到全局技能"
-										}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-											className: McpSkillManager_module_css_default.cardList,
-											children: filteredGlobalSkills.map((skill) => {
-												const isToggling = togglingIds.has(skill.id);
-												return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-													className: `${McpSkillManager_module_css_default.itemCard} ${!skill.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
-													children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-														className: McpSkillManager_module_css_default.itemInfo,
-														children: [
-															/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-																className: McpSkillManager_module_css_default.itemTitleRow,
-																children: [
-																	/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																		className: McpSkillManager_module_css_default.itemName,
-																		children: skill.name
-																	}),
-																	/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																		className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeGlobal}`,
-																		children: "全局 Skill"
-																	}),
-																	/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-																		className: `${McpSkillManager_module_css_default.itemBadge} ${skill.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
-																		children: skill.enabled ? "已激活" : "已停用"
-																	})
-																]
-															}),
-															skill.description ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-																className: McpSkillManager_module_css_default.itemDesc,
-																children: skill.description
-															}) : null,
-															/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-																className: McpSkillManager_module_css_default.itemExtra,
-																children: ["路径: ", skill.path]
-															})
-														]
-													}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-														className: McpSkillManager_module_css_default.itemAction,
-														children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
-															checked: skill.enabled,
-															loading: isToggling,
-															disabled: isToggling,
-															ariaLabel: `切换技能 ${skill.name}`,
-															onChange: () => handleToggleSkill(skill)
-														})
-													})]
-												}, skill.id);
-											})
-										})]
-									})
-								]
-							})] })
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: McpSkillManager_module_css_default.footer,
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-								className: McpSkillManager_module_css_default.footerTip,
-								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "💡 停用技能时移动至同级 skill-disable 目录；停用 MCP 则在 cordis.patch.yml 增加 disabled: true" })
+								})
 							}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 								type: "button",
-								className: McpSkillManager_module_css_default.closeBtn,
+								className: McpSkillManager_module_css_default.iconBtn,
 								onClick: onClose,
-								children: "完成"
+								title: "关闭",
+								"aria-label": "关闭",
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+									width: "13",
+									height: "13",
+									viewBox: "0 0 16 16",
+									fill: "none",
+									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+										d: "M3.5 3.5L12.5 12.5M12.5 3.5L3.5 12.5",
+										stroke: "currentColor",
+										strokeWidth: "1.5",
+										strokeLinecap: "round"
+									})
+								})
 							})]
+						})]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: McpSkillManager_module_css_default.filterBar,
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("input", {
+							type: "text",
+							className: McpSkillManager_module_css_default.searchInput,
+							placeholder: "搜索技能或 MCP 服务...",
+							value: searchQuery,
+							onChange: (e) => setSearchQuery(e.target.value)
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: McpSkillManager_module_css_default.tabs,
+							children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "all" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
+									onClick: () => setActiveTab("all"),
+									children: [
+										"全部 (",
+										projectCount + globalSkillCount + globalMcpCount,
+										")"
+									]
+								}),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "project" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
+									onClick: () => setActiveTab("project"),
+									children: [
+										"项目级 (",
+										projectCount,
+										")"
+									]
+								}),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									className: `${McpSkillManager_module_css_default.tabBtn} ${activeTab === "global" ? McpSkillManager_module_css_default.tabBtnActive : ""}`,
+									onClick: () => setActiveTab("global"),
+									children: [
+										"全局级 (",
+										globalSkillCount + globalMcpCount,
+										")"
+									]
+								})
+							]
+						})]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+						className: McpSkillManager_module_css_default.groups,
+						children: loading && !data ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							className: McpSkillManager_module_css_default.emptyState,
+							children: "加载中..."
+						}) : error ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: McpSkillManager_module_css_default.emptyState,
+							style: { color: "#ef4444" },
+							children: ["加载失败: ", error]
+						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [(activeTab === "all" || activeTab === "project") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: McpSkillManager_module_css_default.groupTitle,
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "📁 项目级技能" }), data?.projectRoot && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+								className: McpSkillManager_module_css_default.groupSubtitle,
+								title: data.projectRoot,
+								children: data.projectRoot
+							})]
+						}), filteredProjectSkills.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							className: McpSkillManager_module_css_default.emptyState,
+							children: "当前项目未发现技能 (.agents/skills 或 .dsh/skills)"
+						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							className: McpSkillManager_module_css_default.cardList,
+							children: filteredProjectSkills.map((skill) => {
+								const isToggling = togglingIds.has(skill.id);
+								return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+									className: `${McpSkillManager_module_css_default.itemCard} ${!skill.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+										className: McpSkillManager_module_css_default.itemInfo,
+										children: [
+											/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+												className: McpSkillManager_module_css_default.itemTitleRow,
+												children: [
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: McpSkillManager_module_css_default.itemName,
+														title: skill.name,
+														children: skill.name
+													}),
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeProject}`,
+														children: "项目级"
+													}),
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: `${McpSkillManager_module_css_default.itemBadge} ${skill.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
+														children: skill.enabled ? "已激活" : "已停用"
+													})
+												]
+											}),
+											skill.description ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+												className: McpSkillManager_module_css_default.itemDesc,
+												title: skill.description,
+												children: skill.description
+											}) : null,
+											/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+												className: McpSkillManager_module_css_default.itemExtra,
+												title: skill.path,
+												children: skill.path
+											})
+										]
+									}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+										className: McpSkillManager_module_css_default.itemAction,
+										children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
+											checked: skill.enabled,
+											loading: isToggling,
+											disabled: isToggling,
+											ariaLabel: `切换技能 ${skill.name}`,
+											onChange: () => handleToggleSkill(skill)
+										})
+									})]
+								}, skill.id);
+							})
+						})] }), (activeTab === "all" || activeTab === "global") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.groupTitle,
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "🔌 全局 MCP 服务 (~/.dsh/cordis.patch.yml)" })
+							}),
+							filteredGlobalMcps.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.emptyState,
+								children: "~/.dsh/cordis.patch.yml 中未找到 MCP"
+							}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.cardList,
+								children: filteredGlobalMcps.map((mcp) => {
+									const isToggling = togglingIds.has(mcp.id);
+									return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+										className: `${McpSkillManager_module_css_default.itemCard} ${!mcp.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+											className: McpSkillManager_module_css_default.itemInfo,
+											children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+												className: McpSkillManager_module_css_default.itemTitleRow,
+												children: [
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: McpSkillManager_module_css_default.itemName,
+														title: mcp.serverName,
+														children: mcp.serverName
+													}),
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeMcp}`,
+														children: "全局 MCP"
+													}),
+													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: `${McpSkillManager_module_css_default.itemBadge} ${mcp.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
+														children: mcp.enabled ? "已激活" : "已停用"
+													})
+												]
+											}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+												className: McpSkillManager_module_css_default.itemExtra,
+												title: mcp.command || mcp.url,
+												children: [
+													mcp.transport,
+													mcp.command ? ` · ${mcp.command} ${(mcp.args || []).join(" ")}` : "",
+													mcp.url ? ` · ${mcp.url}` : ""
+												]
+											})]
+										}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+											className: McpSkillManager_module_css_default.itemAction,
+											children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
+												checked: mcp.enabled,
+												loading: isToggling,
+												disabled: isToggling,
+												ariaLabel: `切换 MCP ${mcp.serverName}`,
+												onChange: () => handleToggleMcp(mcp)
+											})
+										})]
+									}, mcp.id);
+								})
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.groupTitle,
+								style: { marginTop: "8px" },
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "⚡ 全局技能 (~/.agents/skills 或 ~/.dsh/skills)" })
+							}),
+							filteredGlobalSkills.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.emptyState,
+								children: "未发现全局技能"
+							}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+								className: McpSkillManager_module_css_default.cardList,
+								children: filteredGlobalSkills.map((skill) => {
+									const isToggling = togglingIds.has(skill.id);
+									return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+										className: `${McpSkillManager_module_css_default.itemCard} ${!skill.enabled ? McpSkillManager_module_css_default.itemCardDisabled : ""}`,
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+											className: McpSkillManager_module_css_default.itemInfo,
+											children: [
+												/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+													className: McpSkillManager_module_css_default.itemTitleRow,
+													children: [
+														/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+															className: McpSkillManager_module_css_default.itemName,
+															title: skill.name,
+															children: skill.name
+														}),
+														/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+															className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeGlobal}`,
+															children: "全局 Skill"
+														}),
+														/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+															className: `${McpSkillManager_module_css_default.itemBadge} ${skill.enabled ? McpSkillManager_module_css_default.badgeActive : McpSkillManager_module_css_default.badgeInactive}`,
+															children: skill.enabled ? "已激活" : "已停用"
+														})
+													]
+												}),
+												skill.description ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+													className: McpSkillManager_module_css_default.itemDesc,
+													title: skill.description,
+													children: skill.description
+												}) : null,
+												/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+													className: McpSkillManager_module_css_default.itemExtra,
+													title: skill.path,
+													children: skill.path
+												})
+											]
+										}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+											className: McpSkillManager_module_css_default.itemAction,
+											children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Switch, {
+												checked: skill.enabled,
+												loading: isToggling,
+												disabled: isToggling,
+												ariaLabel: `切换技能 ${skill.name}`,
+												onChange: () => handleToggleSkill(skill)
+											})
+										})]
+									}, skill.id);
+								})
+							})
+						] })] })
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+						className: McpSkillManager_module_css_default.footer,
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							className: McpSkillManager_module_css_default.footerTip,
+							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "💡 停用技能移至 skills-disable；停用 MCP 写入 disabled: true" })
 						})
-					]
-				})
+					})
+				]
 			});
-			if (typeof document === "undefined") return null;
-			return (0, react_dom.createPortal)(modalContent, document.body);
 		}
 		//#endregion
 		//#region src/client/McpSkillButton.tsx
@@ -572,7 +509,24 @@ window.__ModuleLoader__.load({
 			const [open, setOpen] = (0, react.useState)(false);
 			const [hovered, setHovered] = (0, react.useState)(false);
 			const [tooltipVisible, setTooltipVisible] = (0, react.useState)(false);
+			const rootRef = (0, react.useRef)(null);
+			(0, react.useEffect)(() => {
+				if (!open) return;
+				const handleClickOutside = (e) => {
+					if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
+				};
+				const handleKeyDown = (e) => {
+					if (e.key === "Escape") setOpen(false);
+				};
+				document.addEventListener("mousedown", handleClickOutside);
+				document.addEventListener("keydown", handleKeyDown);
+				return () => {
+					document.removeEventListener("mousedown", handleClickOutside);
+					document.removeEventListener("keydown", handleKeyDown);
+				};
+			}, [open]);
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+				ref: rootRef,
 				onMouseEnter: () => {
 					setHovered(true);
 					setTooltipVisible(true);
@@ -594,8 +548,10 @@ window.__ModuleLoader__.load({
 				children: [
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 						type: "button",
-						title: "MCP & Skill 管理",
-						"aria-label": "MCP & Skill 管理",
+						title: "MCP & Skills 管理",
+						"aria-label": "MCP & Skills 管理",
+						"aria-haspopup": "true",
+						"aria-expanded": open,
 						onClick: () => setOpen((prev) => !prev),
 						style: {
 							display: "inline-flex",
@@ -665,9 +621,9 @@ window.__ModuleLoader__.load({
 							whiteSpace: "nowrap",
 							pointerEvents: "none"
 						},
-						children: "MCP & Skill 管理"
+						children: "MCP & Skills 管理"
 					}),
-					open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillModal, {
+					open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillPopover, {
 						rpc,
 						sessionId,
 						onClose: () => setOpen(false)

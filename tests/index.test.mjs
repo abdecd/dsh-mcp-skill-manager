@@ -25,7 +25,7 @@ test('cordis.patch.yml contains MCP definitions', () => {
 test('skill directory movement toggles activation cleanly', () => {
   const tmpRoot = path.join('/tmp', 'test-skill-' + Date.now())
   const skillsDir = path.join(tmpRoot, 'skills')
-  const disableDir = path.join(tmpRoot, 'skill-disable')
+  const disableDir = path.join(tmpRoot, 'skills-disable')
   const skillName = 'demo-skill'
 
   fs.mkdirSync(path.join(skillsDir, skillName), { recursive: true })
@@ -37,7 +37,7 @@ test('skill directory movement toggles activation cleanly', () => {
 
   assert.ok(fs.existsSync(path.join(skillsDir, skillName, 'SKILL.md')))
 
-  // Deactivate: move to skill-disable
+  // Deactivate: move to skills-disable
   fs.mkdirSync(disableDir, { recursive: true })
   fs.renameSync(path.join(skillsDir, skillName), path.join(disableDir, skillName))
   assert.ok(!fs.existsSync(path.join(skillsDir, skillName)))
