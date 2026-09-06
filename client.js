@@ -5,9 +5,10 @@ window.__ModuleLoader__.load({
 		var exports = module.exports;
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 		let react = require("react");
+		let react_dom = require("react-dom");
 		let react_jsx_runtime = require("react/jsx-runtime");
 		//#region \0dsh-css:/run/media/user1/78E6859DE6855BEE/code/js/dsh-mcp-skill-manager/src/client/McpSkillManager.module.css.mjs
-		const css = ".VlMPOq_popoverMenu{background:var(--dsw-specific-menu,#1e1e24);width:340px;max-width:min(380px,92vw);max-height:min(460px,72vh);color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l1,#ffffff1f);box-shadow:var(--dsw-elevation-prominent,0 16px 36px #00000080);z-index:1000;box-sizing:border-box;border-radius:14px;flex-direction:column;animation:.12s cubic-bezier(.16,1,.3,1) VlMPOq_popoverFadeIn;display:flex;position:absolute;bottom:calc(100% + 8px);right:0;overflow:hidden}@keyframes VlMPOq_popoverFadeIn{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);flex:none;justify-content:space-between;align-items:center;padding:8px 12px 6px;display:flex}.VlMPOq_titleArea{align-items:center;gap:6px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,inherit);margin:0;font-size:13px;font-weight:600}.VlMPOq_headerActions{align-items:center;gap:2px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:5px;justify-content:center;align-items:center;width:22px;height:22px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,inherit)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);flex-direction:column;flex:none;gap:6px;padding:6px 10px;display:flex}.VlMPOq_searchInput{box-sizing:border-box;background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);width:100%;color:var(--dsw-alias-label-primary,inherit);border-radius:6px;outline:none;padding:4px 8px;font-size:11.5px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:5px;gap:2px;padding:2px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;text-align:center;background:0 0;border:none;border-radius:4px;flex:1;padding:2px 4px;font-size:10.5px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,inherit)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:var(--dsw-alias-label-primary,inherit)!important}.VlMPOq_listContainer{flex-direction:column;flex:1;min-height:0;padding:4px 6px 8px;display:flex;overflow-y:auto}.VlMPOq_listContainer::-webkit-scrollbar{width:4px}.VlMPOq_listContainer::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_listContainer::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_cardList{flex-direction:column;gap:2px;display:flex}.VlMPOq_itemCard{box-sizing:border-box;cursor:pointer;user-select:none;background:0 0;border:1px solid #0000;border-radius:6px;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:6px 8px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff0d);border-color:var(--dsw-alias-border-l2,#ffffff0f)}.VlMPOq_itemCardDisabled{opacity:.65}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;justify-content:center;gap:2px;min-width:0;display:flex}.VlMPOq_itemTitleRow{align-items:center;gap:5px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,inherit);text-overflow:ellipsis;white-space:nowrap;font-size:12.5px;font-weight:500;overflow:hidden}.VlMPOq_itemBadge{border-radius:4px;flex:none;padding:0 5px;font-size:9.5px;font-weight:500;line-height:15px}.VlMPOq_badgeSkill{color:#10b981;background:#10b98124;border:1px solid #10b98147}.VlMPOq_badgeMcp{color:#f59e0b;background:#f59e0b24;border:1px solid #f59e0b47}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f624;border:1px solid #3b82f647}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f724;border:1px solid #a855f747}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:15px;overflow:hidden}.VlMPOq_itemAction{flex:none;justify-content:center;align-self:center;align-items:center;padding-left:4px;display:flex}.VlMPOq_switchTrack{background:var(--dsw-alias-border-l3,#8c8c8c4d);border:1px solid var(--dsw-alias-border-l2,#8c8c8c66);cursor:pointer;box-sizing:border-box;border-radius:999px;flex:none;align-items:center;width:32px;height:18px;padding:0 2px;transition:all .2s cubic-bezier(.16,1,.3,1);display:flex;position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6);border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;flex:none;width:12px;height:12px;transition:transform .2s cubic-bezier(.16,1,.3,1);transform:translate(0);box-shadow:0 1px 3px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(14px)}.VlMPOq_loadingSpinner{border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:8px;height:8px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);padding:16px 10px;font-size:12px}";
+		const css = ".VlMPOq_popoverMenu{background:var(--dsw-specific-menu,#1e1e24);width:340px;max-width:min(380px,92vw);max-height:min(460px,72vh);color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l1,#ffffff1f);box-shadow:var(--dsw-elevation-prominent,0 16px 36px #00000080);z-index:1100;box-sizing:border-box;border-radius:14px;flex-direction:column;min-height:300px;animation:.12s cubic-bezier(.16,1,.3,1) VlMPOq_popoverFadeIn;display:flex;position:absolute;bottom:calc(100% + 8px);right:0;overflow:hidden}@media (width<=600px){.VlMPOq_popoverMenu{width:min(340px,100vw - 24px);max-width:calc(100vw - 24px);min-height:min(300px,100dvh - 24px);max-height:min(460px,100dvh - 24px)}}@keyframes VlMPOq_popoverFadeIn{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);flex:none;justify-content:space-between;align-items:center;padding:8px 12px 6px;display:flex}.VlMPOq_titleArea{align-items:center;gap:6px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,inherit);margin:0;font-size:13px;font-weight:600}.VlMPOq_headerActions{align-items:center;gap:2px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:5px;justify-content:center;align-items:center;width:22px;height:22px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,inherit)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);flex-direction:column;flex:none;gap:6px;padding:6px 10px;display:flex}.VlMPOq_searchInput{box-sizing:border-box;background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);width:100%;color:var(--dsw-alias-label-primary,inherit);border-radius:6px;outline:none;padding:4px 8px;font-size:11.5px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:5px;gap:2px;padding:2px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;text-align:center;background:0 0;border:none;border-radius:4px;flex:1;padding:2px 4px;font-size:10.5px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,inherit)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:var(--dsw-alias-label-primary,inherit)!important}.VlMPOq_listContainer{flex-direction:column;flex:1;min-height:0;padding:4px 6px 8px;display:flex;overflow-y:auto}.VlMPOq_listContainer::-webkit-scrollbar{width:4px}.VlMPOq_listContainer::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_listContainer::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_cardList{flex-direction:column;gap:2px;display:flex}.VlMPOq_itemCard{box-sizing:border-box;cursor:pointer;user-select:none;background:0 0;border:1px solid #0000;border-radius:6px;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:6px 8px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff0d);border-color:var(--dsw-alias-border-l2,#ffffff0f)}.VlMPOq_itemCardDisabled{opacity:.65}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;justify-content:center;gap:2px;min-width:0;display:flex}.VlMPOq_itemTitleRow{align-items:center;gap:5px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,inherit);text-overflow:ellipsis;white-space:nowrap;font-size:12.5px;font-weight:500;overflow:hidden}.VlMPOq_itemBadge{border-radius:4px;flex:none;padding:0 5px;font-size:9.5px;font-weight:500;line-height:15px}.VlMPOq_badgeSkill{color:#10b981;background:#10b98124;border:1px solid #10b98147}.VlMPOq_badgeMcp{color:#f59e0b;background:#f59e0b24;border:1px solid #f59e0b47}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f624;border:1px solid #3b82f647}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f724;border:1px solid #a855f747}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:15px;overflow:hidden}.VlMPOq_itemAction{flex:none;justify-content:center;align-self:center;align-items:center;padding-left:4px;display:flex}.VlMPOq_switchTrack{background:var(--dsw-alias-border-l3,#8c8c8c4d);border:1px solid var(--dsw-alias-border-l2,#8c8c8c66);cursor:pointer;box-sizing:border-box;border-radius:999px;flex:none;align-items:center;width:32px;height:18px;padding:0 2px;transition:all .2s cubic-bezier(.16,1,.3,1);display:flex;position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6);border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;flex:none;width:12px;height:12px;transition:transform .2s cubic-bezier(.16,1,.3,1);transform:translate(0);box-shadow:0 1px 3px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(14px)}.VlMPOq_loadingSpinner{border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:8px;height:8px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);padding:16px 10px;font-size:12px}";
 		const tagId = "dsh-mcp-skill-manager/McpSkillManager.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
 			const tag = document.createElement("style");
@@ -17,40 +18,40 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
-			"popoverMenu": "VlMPOq_popoverMenu",
-			"filterBar": "VlMPOq_filterBar",
-			"switchTrack": "VlMPOq_switchTrack",
-			"itemBadge": "VlMPOq_itemBadge",
-			"popoverFadeIn": "VlMPOq_popoverFadeIn",
-			"spin": "VlMPOq_spin",
-			"iconBtn": "VlMPOq_iconBtn",
-			"itemTitleRow": "VlMPOq_itemTitleRow",
-			"tabBtn": "VlMPOq_tabBtn",
-			"cardList": "VlMPOq_cardList",
-			"headerActions": "VlMPOq_headerActions",
-			"switchThumb": "VlMPOq_switchThumb",
-			"badgeGlobal": "VlMPOq_badgeGlobal",
-			"tabs": "VlMPOq_tabs",
-			"switchThumbChecked": "VlMPOq_switchThumbChecked",
 			"listContainer": "VlMPOq_listContainer",
-			"loadingSpinner": "VlMPOq_loadingSpinner",
 			"itemName": "VlMPOq_itemName",
-			"tabBtnActive": "VlMPOq_tabBtnActive",
-			"itemCardDisabled": "VlMPOq_itemCardDisabled",
-			"itemInfo": "VlMPOq_itemInfo",
-			"badgeSkill": "VlMPOq_badgeSkill",
-			"titleArea": "VlMPOq_titleArea",
-			"itemDesc": "VlMPOq_itemDesc",
-			"itemAction": "VlMPOq_itemAction",
-			"badgeProject": "VlMPOq_badgeProject",
-			"badgeMcp": "VlMPOq_badgeMcp",
-			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
 			"header": "VlMPOq_header",
-			"searchInput": "VlMPOq_searchInput",
+			"switchThumb": "VlMPOq_switchThumb",
 			"title": "VlMPOq_title",
-			"emptyState": "VlMPOq_emptyState",
 			"itemCard": "VlMPOq_itemCard",
-			"switchTrackChecked": "VlMPOq_switchTrackChecked"
+			"itemDesc": "VlMPOq_itemDesc",
+			"popoverFadeIn": "VlMPOq_popoverFadeIn",
+			"itemTitleRow": "VlMPOq_itemTitleRow",
+			"badgeMcp": "VlMPOq_badgeMcp",
+			"tabBtn": "VlMPOq_tabBtn",
+			"switchThumbChecked": "VlMPOq_switchThumbChecked",
+			"cardList": "VlMPOq_cardList",
+			"itemCardDisabled": "VlMPOq_itemCardDisabled",
+			"itemBadge": "VlMPOq_itemBadge",
+			"spin": "VlMPOq_spin",
+			"titleArea": "VlMPOq_titleArea",
+			"popoverMenu": "VlMPOq_popoverMenu",
+			"iconBtn": "VlMPOq_iconBtn",
+			"badgeProject": "VlMPOq_badgeProject",
+			"emptyState": "VlMPOq_emptyState",
+			"searchInput": "VlMPOq_searchInput",
+			"badgeGlobal": "VlMPOq_badgeGlobal",
+			"switchTrack": "VlMPOq_switchTrack",
+			"badgeSkill": "VlMPOq_badgeSkill",
+			"switchTrackChecked": "VlMPOq_switchTrackChecked",
+			"loadingSpinner": "VlMPOq_loadingSpinner",
+			"itemInfo": "VlMPOq_itemInfo",
+			"itemAction": "VlMPOq_itemAction",
+			"headerActions": "VlMPOq_headerActions",
+			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
+			"tabs": "VlMPOq_tabs",
+			"filterBar": "VlMPOq_filterBar",
+			"tabBtnActive": "VlMPOq_tabBtnActive"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -99,7 +100,12 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 		//#region src/client/McpSkillPopover.tsx
-		function McpSkillPopover({ rpc, sessionId, onClose }) {
+		const VIEWPORT_MARGIN = 12;
+		const POPOVER_GAP = 8;
+		function clamp(value, min, max) {
+			return Math.min(Math.max(value, min), max);
+		}
+		function McpSkillPopover({ rpc, sessionId, onClose, anchorRef, popoverRef, portal = false }) {
 			const [data, setData] = (0, react.useState)(null);
 			const [loading, setLoading] = (0, react.useState)(true);
 			const [error, setError] = (0, react.useState)(null);
@@ -123,6 +129,77 @@ window.__ModuleLoader__.load({
 			(0, react.useEffect)(() => {
 				loadData();
 			}, [sessionId]);
+			const menuRef = (0, react.useRef)(null);
+			const [portalPosition, setPortalPosition] = (0, react.useState)(null);
+			(0, react.useLayoutEffect)(() => {
+				if (!portal) {
+					setPortalPosition(null);
+					return;
+				}
+				const updatePosition = () => {
+					const anchor = anchorRef?.current?.getBoundingClientRect();
+					const menu = menuRef.current;
+					if (!anchor || !menu) return;
+					const viewport = window.visualViewport;
+					const viewportLeft = viewport?.offsetLeft ?? 0;
+					const viewportTop = viewport?.offsetTop ?? 0;
+					const viewportWidth = viewport?.width ?? window.innerWidth;
+					const viewportHeight = viewport?.height ?? window.innerHeight;
+					const viewportRight = viewportLeft + viewportWidth;
+					const viewportBottom = viewportTop + viewportHeight;
+					const menuWidth = menu.offsetWidth;
+					const menuHeight = menu.offsetHeight;
+					const computedMinHeight = Number.parseFloat(window.getComputedStyle(menu).minHeight) || 0;
+					const minLeft = viewportLeft + VIEWPORT_MARGIN;
+					const maxLeft = Math.max(minLeft, viewportRight - menuWidth - VIEWPORT_MARGIN);
+					const left = clamp(anchor.right - menuWidth, minLeft, maxLeft);
+					const spaceAbove = Math.max(0, anchor.top - viewportTop - POPOVER_GAP - VIEWPORT_MARGIN);
+					const spaceBelow = Math.max(0, viewportBottom - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN);
+					const openAbove = spaceAbove >= spaceBelow;
+					const maxHeight = Math.max(1, Math.min(menuHeight, openAbove ? spaceAbove : spaceBelow));
+					const minHeight = Math.min(computedMinHeight, maxHeight);
+					const top = clamp(openAbove ? anchor.top - POPOVER_GAP - maxHeight : anchor.bottom + POPOVER_GAP, viewportTop + VIEWPORT_MARGIN, Math.max(viewportTop + VIEWPORT_MARGIN, viewportBottom - VIEWPORT_MARGIN - maxHeight));
+					setPortalPosition((previous) => {
+						if (previous && previous.left === left && previous.top === top && previous.maxHeight === maxHeight && previous.minHeight === minHeight) return previous;
+						return {
+							left,
+							top,
+							maxHeight,
+							minHeight
+						};
+					});
+				};
+				updatePosition();
+				window.addEventListener("resize", updatePosition);
+				window.addEventListener("scroll", updatePosition, true);
+				const viewport = window.visualViewport;
+				viewport?.addEventListener("resize", updatePosition);
+				viewport?.addEventListener("scroll", updatePosition);
+				const resizeObserver = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(updatePosition);
+				if (resizeObserver) {
+					const anchorElement = anchorRef?.current;
+					if (anchorElement) {
+						resizeObserver.observe(anchorElement);
+						if (anchorElement.parentElement) resizeObserver.observe(anchorElement.parentElement);
+					}
+					if (menuRef.current) resizeObserver.observe(menuRef.current);
+				}
+				return () => {
+					window.removeEventListener("resize", updatePosition);
+					window.removeEventListener("scroll", updatePosition, true);
+					viewport?.removeEventListener("resize", updatePosition);
+					viewport?.removeEventListener("scroll", updatePosition);
+					resizeObserver?.disconnect();
+				};
+			}, [
+				anchorRef,
+				portal,
+				data,
+				loading,
+				error,
+				searchQuery,
+				activeTab
+			]);
 			const handleToggleSkill = async (skill) => {
 				if (togglingIds.has(skill.id)) return;
 				setTogglingIds((prev) => new Set(prev).add(skill.id));
@@ -237,10 +314,26 @@ window.__ModuleLoader__.load({
 				filteredGlobalMcps,
 				filteredGlobalSkills
 			]);
+			const menuStyle = portal ? {
+				position: "fixed",
+				left: portalPosition?.left ?? 0,
+				top: portalPosition?.top ?? 0,
+				right: "auto",
+				bottom: "auto",
+				minHeight: portalPosition ? `${portalPosition.minHeight}px` : void 0,
+				maxHeight: portalPosition ? `${portalPosition.maxHeight}px` : void 0,
+				visibility: portalPosition ? "visible" : "hidden"
+			} : void 0;
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				ref: (node) => {
+					menuRef.current = node;
+					if (popoverRef) popoverRef.current = node;
+				},
 				className: McpSkillManager_module_css_default.popoverMenu,
+				style: menuStyle,
 				onClick: (e) => e.stopPropagation(),
 				onMouseDown: (e) => e.stopPropagation(),
+				onPointerDown: (e) => e.stopPropagation(),
 				children: [
 					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 						className: McpSkillManager_module_css_default.header,
@@ -451,21 +544,32 @@ window.__ModuleLoader__.load({
 			const [open, setOpen] = (0, react.useState)(false);
 			const [hovered, setHovered] = (0, react.useState)(false);
 			const rootRef = (0, react.useRef)(null);
+			const popoverRef = (0, react.useRef)(null);
 			(0, react.useEffect)(() => {
 				if (!open) return;
-				const handleClickOutside = (e) => {
-					if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
+				const handlePointerDown = (e) => {
+					const target = e.target;
+					if (target && (rootRef.current?.contains(target) || popoverRef.current?.contains(target))) return;
+					setOpen(false);
 				};
 				const handleKeyDown = (e) => {
 					if (e.key === "Escape") setOpen(false);
 				};
-				document.addEventListener("mousedown", handleClickOutside);
+				document.addEventListener("pointerdown", handlePointerDown);
 				document.addEventListener("keydown", handleKeyDown);
 				return () => {
-					document.removeEventListener("mousedown", handleClickOutside);
+					document.removeEventListener("pointerdown", handlePointerDown);
 					document.removeEventListener("keydown", handleKeyDown);
 				};
 			}, [open]);
+			const popover = open ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillPopover, {
+				rpc,
+				sessionId,
+				onClose: () => setOpen(false),
+				anchorRef: rootRef,
+				popoverRef,
+				portal: true
+			}) : null;
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
 				ref: rootRef,
 				onMouseEnter: () => setHovered(true),
@@ -473,7 +577,9 @@ window.__ModuleLoader__.load({
 				style: {
 					display: "inline-flex",
 					position: "relative",
+					flex: "0 0 30px",
 					width: 30,
+					minWidth: 30,
 					height: 30,
 					alignItems: "center",
 					justifyContent: "center"
@@ -533,11 +639,7 @@ window.__ModuleLoader__.load({
 							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M14 17.5h7M17.5 14v7" })
 						]
 					})
-				}), open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillPopover, {
-					rpc,
-					sessionId,
-					onClose: () => setOpen(false)
-				})]
+				}), typeof document === "undefined" ? popover : popover && (0, react_dom.createPortal)(popover, document.body)]
 			});
 		}
 		//#endregion

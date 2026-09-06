@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { McpSkillPopover } from './McpSkillPopover.tsx'
 
 export interface McpSkillButtonProps {
@@ -10,27 +11,45 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState(false)
   const rootRef = useRef<HTMLSpanElement>(null)
+  const popoverRef = useRef<HTMLDivElement | null>(null)
 
-  // Close when clicking outside or pressing Escape
+  // Close when clicking outside or pressing Escape. The popover is portaled to
+  // document.body, so it needs its own inside check in addition to the trigger.
   useEffect(() => {
     if (!open) return
-    const handleClickOutside = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false)
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as Node | null
+      if (
+        target &&
+        (rootRef.current?.contains(target) || popoverRef.current?.contains(target))
+      ) {
+        return
       }
+      setOpen(false)
     }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('pointerdown', handlePointerDown)
     document.addEventListener('keydown', handleKeyDown)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('pointerdown', handlePointerDown)
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [open])
+
+  const popover = open ? (
+    <McpSkillPopover
+      rpc={rpc}
+      sessionId={sessionId}
+      onClose={() => setOpen(false)}
+      anchorRef={rootRef}
+      popoverRef={popoverRef}
+      portal
+    />
+  ) : null
 
   return (
     <span
@@ -40,7 +59,9 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
       style={{
         display: 'inline-flex',
         position: 'relative',
+        flex: '0 0 30px',
         width: 30,
+        minWidth: 30,
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',
@@ -94,14 +115,8 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
         </svg>
       </button>
 
-      {/* ModelSelect-style anchored popover menu */}
-      {open && (
-        <McpSkillPopover
-          rpc={rpc}
-          sessionId={sessionId}
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {/* Render outside the composer stacking/overflow context on every viewport. */}
+      {typeof document === 'undefined' ? popover : popover && createPortal(popover, document.body)}
     </span>
   )
 }

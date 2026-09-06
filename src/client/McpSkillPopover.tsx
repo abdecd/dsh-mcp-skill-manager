@@ -1,4 +1,14 @@
-import { useState, useEffect, useMemo, type ReactNode } from 'react'
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type MutableRefObject,
+  type ReactNode,
+  type RefObject,
+} from 'react'
 import type { ManagerData, McpItem, SkillItem } from '../shared.ts'
 import { Switch } from './Switch.tsx'
 import styles from './McpSkillManager.module.css'
@@ -7,13 +17,40 @@ export interface McpSkillPopoverProps {
   rpc: any
   sessionId?: string | undefined
   onClose: () => void
+  /** The trigger to anchor to when the menu is rendered in a portal. */
+  anchorRef?: RefObject<HTMLElement>
+  /** The menu root, used by the owner to keep portal clicks inside the popover. */
+  popoverRef?: MutableRefObject<HTMLDivElement | null>
+  /** Use viewport-fixed positioning to escape overflowing composer ancestors. */
+  portal?: boolean
 }
 
 type ListItem =
   | { type: 'skill'; item: SkillItem }
   | { type: 'mcp'; item: McpItem }
 
-export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProps): ReactNode {
+type PopoverPosition = {
+  left: number
+  top: number
+  maxHeight: number
+  minHeight: number
+}
+
+const VIEWPORT_MARGIN = 12
+const POPOVER_GAP = 8
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}
+
+export function McpSkillPopover({
+  rpc,
+  sessionId,
+  onClose,
+  anchorRef,
+  popoverRef,
+  portal = false,
+}: McpSkillPopoverProps): ReactNode {
   const [data, setData] = useState<ManagerData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +82,104 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
   useEffect(() => {
     loadData()
   }, [sessionId])
+
+  const menuRef = useRef<HTMLDivElement | null>(null)
+  const [portalPosition, setPortalPosition] = useState<PopoverPosition | null>(null)
+
+  // A portal keeps the menu above the mobile composer instead of letting an
+  // overflowing/translated ancestor clip or offset an absolutely positioned menu.
+  useLayoutEffect(() => {
+    if (!portal) {
+      setPortalPosition(null)
+      return
+    }
+
+    const updatePosition = () => {
+      const anchor = anchorRef?.current?.getBoundingClientRect()
+      const menu = menuRef.current
+      if (!anchor || !menu) return
+
+      const viewport = window.visualViewport
+      const viewportLeft = viewport?.offsetLeft ?? 0
+      const viewportTop = viewport?.offsetTop ?? 0
+      const viewportWidth = viewport?.width ?? window.innerWidth
+      const viewportHeight = viewport?.height ?? window.innerHeight
+      const viewportRight = viewportLeft + viewportWidth
+      const viewportBottom = viewportTop + viewportHeight
+      const menuWidth = menu.offsetWidth
+      const menuHeight = menu.offsetHeight
+      const computedMinHeight = Number.parseFloat(window.getComputedStyle(menu).minHeight) || 0
+
+      const minLeft = viewportLeft + VIEWPORT_MARGIN
+      const maxLeft = Math.max(minLeft, viewportRight - menuWidth - VIEWPORT_MARGIN)
+      const left = clamp(anchor.right - menuWidth, minLeft, maxLeft)
+
+      const spaceAbove = Math.max(
+        0,
+        anchor.top - viewportTop - POPOVER_GAP - VIEWPORT_MARGIN,
+      )
+      const spaceBelow = Math.max(
+        0,
+        viewportBottom - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN,
+      )
+      const openAbove = spaceAbove >= spaceBelow
+      const availableSpace = openAbove ? spaceAbove : spaceBelow
+      const maxHeight = Math.max(1, Math.min(menuHeight, availableSpace))
+      const minHeight = Math.min(computedMinHeight, maxHeight)
+      const preferredTop = openAbove
+        ? anchor.top - POPOVER_GAP - maxHeight
+        : anchor.bottom + POPOVER_GAP
+      const top = clamp(
+        preferredTop,
+        viewportTop + VIEWPORT_MARGIN,
+        Math.max(
+          viewportTop + VIEWPORT_MARGIN,
+          viewportBottom - VIEWPORT_MARGIN - maxHeight,
+        ),
+      )
+
+      setPortalPosition((previous) => {
+        if (
+          previous &&
+          previous.left === left &&
+          previous.top === top &&
+          previous.maxHeight === maxHeight &&
+          previous.minHeight === minHeight
+        ) {
+          return previous
+        }
+        return { left, top, maxHeight, minHeight }
+      })
+    }
+
+    updatePosition()
+    window.addEventListener('resize', updatePosition)
+    window.addEventListener('scroll', updatePosition, true)
+    const viewport = window.visualViewport
+    viewport?.addEventListener('resize', updatePosition)
+    viewport?.addEventListener('scroll', updatePosition)
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updatePosition)
+    if (resizeObserver) {
+      const anchorElement = anchorRef?.current
+      if (anchorElement) {
+        resizeObserver.observe(anchorElement)
+        if (anchorElement.parentElement) {
+          resizeObserver.observe(anchorElement.parentElement)
+        }
+      }
+      if (menuRef.current) resizeObserver.observe(menuRef.current)
+    }
+
+    return () => {
+      window.removeEventListener('resize', updatePosition)
+      window.removeEventListener('scroll', updatePosition, true)
+      viewport?.removeEventListener('resize', updatePosition)
+      viewport?.removeEventListener('scroll', updatePosition)
+      resizeObserver?.disconnect()
+    }
+  }, [anchorRef, portal, data, loading, error, searchQuery, activeTab])
 
   // Toggle Skill
   const handleToggleSkill = async (skill: SkillItem) => {
@@ -195,11 +330,30 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
     return list
   }, [activeTab, filteredProjectSkills, filteredGlobalMcps, filteredGlobalSkills])
 
+  const menuStyle: CSSProperties | undefined = portal
+    ? {
+        position: 'fixed',
+        left: portalPosition?.left ?? 0,
+        top: portalPosition?.top ?? 0,
+        right: 'auto',
+        bottom: 'auto',
+        minHeight: portalPosition ? `${portalPosition.minHeight}px` : undefined,
+        maxHeight: portalPosition ? `${portalPosition.maxHeight}px` : undefined,
+        visibility: portalPosition ? 'visible' : 'hidden',
+      }
+    : undefined
+
   return (
     <div
+      ref={(node) => {
+        menuRef.current = node
+        if (popoverRef) popoverRef.current = node
+      }}
       className={styles.popoverMenu}
+      style={menuStyle}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
     >
       {/* Header */}
       <div className={styles.header}>

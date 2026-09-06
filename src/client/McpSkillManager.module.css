@@ -13,10 +13,23 @@
   box-shadow: var(--dsw-elevation-prominent, 0 16px 36px rgba(0, 0, 0, 0.5));
   display: flex;
   flex-direction: column;
+  min-height: 300px;
   overflow: hidden;
-  z-index: 1000;
+  z-index: 1100;
   animation: popoverFadeIn 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
+}
+
+/* Keep the menu comfortably inside narrow mobile viewports. The runtime
+ * placement still follows the trigger, while this prevents horizontal
+ * overflow before the first measurement. */
+@media (max-width: 600px) {
+  .popoverMenu {
+    width: min(340px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    min-height: min(300px, calc(100dvh - 24px));
+    max-height: min(460px, calc(100dvh - 24px));
+  }
 }
 
 @keyframes popoverFadeIn {
