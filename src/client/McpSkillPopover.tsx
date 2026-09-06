@@ -9,6 +9,10 @@ export interface McpSkillPopoverProps {
   onClose: () => void
 }
 
+type ListItem =
+  | { type: 'skill'; item: SkillItem }
+  | { type: 'mcp'; item: McpItem }
+
 export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProps): ReactNode {
   const [data, setData] = useState<ManagerData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -123,7 +127,6 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
     }
   }
 
-  // Filter items
   const query = searchQuery.trim().toLowerCase()
 
   const filteredProjectSkills = useMemo(() => {
@@ -163,6 +166,25 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
   const globalSkillCount = data ? data.globalSkills.length : 0
   const globalMcpCount = data ? data.globalMcps.length : 0
 
+  // Combine into a single list: project level first, then global level
+  const visibleItems = useMemo(() => {
+    const list: ListItem[] = []
+    if (activeTab === 'all' || activeTab === 'project') {
+      for (const skill of filteredProjectSkills) {
+        list.push({ type: 'skill', item: skill })
+      }
+    }
+    if (activeTab === 'all' || activeTab === 'global') {
+      for (const mcp of filteredGlobalMcps) {
+        list.push({ type: 'mcp', item: mcp })
+      }
+      for (const skill of filteredGlobalSkills) {
+        list.push({ type: 'skill', item: skill })
+      }
+    }
+    return list
+  }, [activeTab, filteredProjectSkills, filteredGlobalMcps, filteredGlobalSkills])
+
   return (
     <div
       className={styles.popoverMenu}
@@ -172,15 +194,15 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h4 className={styles.title}>MCP & Skills 管理</h4>
+          <h4 className={styles.title}>MCP & Skills</h4>
         </div>
         <div className={styles.headerActions}>
           <button
             type="button"
             className={styles.iconBtn}
             onClick={loadData}
-            title="刷新列表"
-            aria-label="刷新列表"
+            title="刷新"
+            aria-label="刷新"
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
               <path
@@ -230,214 +252,131 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
             className={`${styles.tabBtn} ${activeTab === 'project' ? styles.tabBtnActive : ''}`}
             onClick={() => setActiveTab('project')}
           >
-            项目级 ({projectCount})
+            项目 ({projectCount})
           </button>
           <button
             type="button"
             className={`${styles.tabBtn} ${activeTab === 'global' ? styles.tabBtnActive : ''}`}
             onClick={() => setActiveTab('global')}
           >
-            全局级 ({globalSkillCount + globalMcpCount})
+            全局 ({globalSkillCount + globalMcpCount})
           </button>
         </div>
       </div>
 
-      {/* Scrollable Groups */}
-      <div className={styles.groups}>
+      {/* Single Compact List */}
+      <div className={styles.listContainer}>
         {loading && !data ? (
           <div className={styles.emptyState}>加载中...</div>
         ) : error ? (
           <div className={styles.emptyState} style={{ color: '#ef4444' }}>
             加载失败: {error}
           </div>
+        ) : visibleItems.length === 0 ? (
+          <div className={styles.emptyState}>
+            {searchQuery ? '无匹配结果' : '暂无相关项'}
+          </div>
         ) : (
-          <>
-            {/* 1. PROJECT LEVEL SECTION (DISPLAYED FIRST) */}
-            {(activeTab === 'all' || activeTab === 'project') && (
-              <div>
-                <div className={styles.groupTitle}>
-                  <span>项目级技能</span>
-                  {data?.projectRoot && (
-                    <span className={styles.groupSubtitle} title={data.projectRoot}>
-                      {data.projectRoot}
-                    </span>
-                  )}
-                </div>
-
-                {filteredProjectSkills.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    当前项目未发现技能 (.agents/skills 或 .dsh/skills)
-                  </div>
-                ) : (
-                  <div className={styles.cardList}>
-                    {filteredProjectSkills.map((skill) => {
-                      const isToggling = togglingIds.has(skill.id)
-                      return (
-                        <div
-                          key={skill.id}
-                          className={`${styles.itemCard} ${!skill.enabled ? styles.itemCardDisabled : ''}`}
+          <div className={styles.cardList}>
+            {visibleItems.map((entry) => {
+              if (entry.type === 'skill') {
+                const skill = entry.item
+                const isToggling = togglingIds.has(skill.id)
+                return (
+                  <div
+                    key={skill.id}
+                    className={`${styles.itemCard} ${!skill.enabled ? styles.itemCardDisabled : ''}`}
+                  >
+                    <div className={styles.itemInfo}>
+                      <div className={styles.itemTitleRow}>
+                        <span className={styles.itemName} title={skill.name}>
+                          {skill.name}
+                        </span>
+                        <span
+                          className={`${styles.itemBadge} ${
+                            skill.scope === 'project' ? styles.badgeProject : styles.badgeGlobal
+                          }`}
                         >
-                          <div className={styles.itemInfo}>
-                            <div className={styles.itemTitleRow}>
-                              <span className={styles.itemName} title={skill.name}>
-                                {skill.name}
-                              </span>
-                              <span className={`${styles.itemBadge} ${styles.badgeProject}`}>
-                                项目级
-                              </span>
-                              <span
-                                className={`${styles.itemBadge} ${
-                                  skill.enabled ? styles.badgeActive : styles.badgeInactive
-                                }`}
-                              >
-                                {skill.enabled ? '已激活' : '已停用'}
-                              </span>
-                            </div>
-                            {skill.description ? (
-                              <div className={styles.itemDesc} title={skill.description}>
-                                {skill.description}
-                              </div>
-                            ) : null}
-                            <div className={styles.itemExtra} title={skill.path}>
-                              {skill.path}
-                            </div>
-                          </div>
-                          <div className={styles.itemAction}>
-                            <Switch
-                              checked={skill.enabled}
-                              loading={isToggling}
-                              disabled={isToggling}
-                              ariaLabel={`切换技能 ${skill.name}`}
-                              onChange={() => handleToggleSkill(skill)}
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* 2. GLOBAL LEVEL SECTION (DISPLAYED SECOND) */}
-            {(activeTab === 'all' || activeTab === 'global') && (
-              <div>
-                {/* 2.1 Global MCPs */}
-                <div className={styles.groupTitle}>
-                  <span>全局 MCP 服务 (~/.dsh/cordis.patch.yml)</span>
-                </div>
-
-                {filteredGlobalMcps.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    ~/.dsh/cordis.patch.yml 中未找到 MCP
-                  </div>
-                ) : (
-                  <div className={styles.cardList}>
-                    {filteredGlobalMcps.map((mcp) => {
-                      const isToggling = togglingIds.has(mcp.id)
-                      return (
-                        <div
-                          key={mcp.id}
-                          className={`${styles.itemCard} ${!mcp.enabled ? styles.itemCardDisabled : ''}`}
+                          {skill.scope === 'project' ? '项目' : '全局'}
+                        </span>
+                        <span
+                          className={`${styles.itemBadge} ${
+                            skill.enabled ? styles.badgeActive : styles.badgeInactive
+                          }`}
                         >
-                          <div className={styles.itemInfo}>
-                            <div className={styles.itemTitleRow}>
-                              <span className={styles.itemName} title={mcp.serverName}>
-                                {mcp.serverName}
-                              </span>
-                              <span className={`${styles.itemBadge} ${styles.badgeMcp}`}>
-                                全局 MCP
-                              </span>
-                              <span
-                                className={`${styles.itemBadge} ${
-                                  mcp.enabled ? styles.badgeActive : styles.badgeInactive
-                                }`}
-                              >
-                                {mcp.enabled ? '已激活' : '已停用'}
-                              </span>
-                            </div>
-                            <div className={styles.itemExtra} title={mcp.command || mcp.url}>
-                              {mcp.transport}
-                              {mcp.command ? ` · ${mcp.command} ${(mcp.args || []).join(' ')}` : ''}
-                              {mcp.url ? ` · ${mcp.url}` : ''}
-                            </div>
-                          </div>
-                          <div className={styles.itemAction}>
-                            <Switch
-                              checked={mcp.enabled}
-                              loading={isToggling}
-                              disabled={isToggling}
-                              ariaLabel={`切换 MCP ${mcp.serverName}`}
-                              onChange={() => handleToggleMcp(mcp)}
-                            />
-                          </div>
+                          {skill.enabled ? '已激活' : '已停用'}
+                        </span>
+                      </div>
+                      {skill.description ? (
+                        <div className={styles.itemDesc} title={skill.description}>
+                          {skill.description}
                         </div>
-                      )
-                    })}
+                      ) : null}
+                    </div>
+                    <div className={styles.itemAction}>
+                      <Switch
+                        checked={skill.enabled}
+                        loading={isToggling}
+                        disabled={isToggling}
+                        ariaLabel={`切换技能 ${skill.name}`}
+                        onChange={() => handleToggleSkill(skill)}
+                      />
+                    </div>
                   </div>
-                )}
-
-                {/* 2.2 Global Skills */}
-                <div className={styles.groupTitle} style={{ marginTop: '8px' }}>
-                  <span>全局技能 (~/.agents/skills 或 ~/.dsh/skills)</span>
-                </div>
-
-                {filteredGlobalSkills.length === 0 ? (
-                  <div className={styles.emptyState}>未发现全局技能</div>
-                ) : (
-                  <div className={styles.cardList}>
-                    {filteredGlobalSkills.map((skill) => {
-                      const isToggling = togglingIds.has(skill.id)
-                      return (
-                        <div
-                          key={skill.id}
-                          className={`${styles.itemCard} ${!skill.enabled ? styles.itemCardDisabled : ''}`}
+                )
+              } else {
+                const mcp = entry.item
+                const isToggling = togglingIds.has(mcp.id)
+                return (
+                  <div
+                    key={mcp.id}
+                    className={`${styles.itemCard} ${!mcp.enabled ? styles.itemCardDisabled : ''}`}
+                  >
+                    <div className={styles.itemInfo}>
+                      <div className={styles.itemTitleRow}>
+                        <span className={styles.itemName} title={mcp.serverName}>
+                          {mcp.serverName}
+                        </span>
+                        <span className={`${styles.itemBadge} ${styles.badgeMcp}`}>
+                          MCP
+                        </span>
+                        <span
+                          className={`${styles.itemBadge} ${
+                            mcp.enabled ? styles.badgeActive : styles.badgeInactive
+                          }`}
                         >
-                          <div className={styles.itemInfo}>
-                            <div className={styles.itemTitleRow}>
-                              <span className={styles.itemName} title={skill.name}>
-                                {skill.name}
-                              </span>
-                              <span className={`${styles.itemBadge} ${styles.badgeGlobal}`}>
-                                全局 Skill
-                              </span>
-                              <span
-                                className={`${styles.itemBadge} ${
-                                  skill.enabled ? styles.badgeActive : styles.badgeInactive
-                                }`}
-                              >
-                                {skill.enabled ? '已激活' : '已停用'}
-                              </span>
-                            </div>
-                            {skill.description ? (
-                              <div className={styles.itemDesc} title={skill.description}>
-                                {skill.description}
-                              </div>
-                            ) : null}
-                            <div className={styles.itemExtra} title={skill.path}>
-                              {skill.path}
-                            </div>
-                          </div>
-                          <div className={styles.itemAction}>
-                            <Switch
-                              checked={skill.enabled}
-                              loading={isToggling}
-                              disabled={isToggling}
-                              ariaLabel={`切换技能 ${skill.name}`}
-                              onChange={() => handleToggleSkill(skill)}
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
+                          {mcp.enabled ? '已激活' : '已停用'}
+                        </span>
+                      </div>
+                      <div
+                        className={styles.itemDesc}
+                        title={
+                          (mcp.command ? `${mcp.command} ${(mcp.args || []).join(' ')}` : '') ||
+                          mcp.url ||
+                          mcp.transport
+                        }
+                      >
+                        {mcp.transport}
+                        {mcp.command ? ` · ${mcp.command} ${(mcp.args || []).join(' ')}` : ''}
+                        {mcp.url ? ` · ${mcp.url}` : ''}
+                      </div>
+                    </div>
+                    <div className={styles.itemAction}>
+                      <Switch
+                        checked={mcp.enabled}
+                        loading={isToggling}
+                        disabled={isToggling}
+                        ariaLabel={`切换 MCP ${mcp.serverName}`}
+                        onChange={() => handleToggleMcp(mcp)}
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
-          </>
+                )
+              }
+            })}
+          </div>
         )}
       </div>
-
     </div>
   )
 }
