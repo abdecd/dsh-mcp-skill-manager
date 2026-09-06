@@ -50,7 +50,7 @@
 .title {
   font-size: 13px;
   font-weight: 600;
-  color: var(--dsw-alias-label-primary, #ffffff);
+  color: var(--dsw-alias-label-primary, inherit);
   margin: 0;
 }
 
@@ -76,8 +76,8 @@
 }
 
 .iconBtn:hover {
-  background: var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.08));
-  color: var(--dsw-alias-label-primary, #ffffff);
+  background: var(--dsw-alias-interactive-bg-hover, rgba(125, 125, 125, 0.12));
+  color: var(--dsw-alias-label-primary, inherit);
 }
 
 /* Filter bar */
@@ -93,12 +93,12 @@
 .searchInput {
   width: 100%;
   box-sizing: border-box;
-  background: var(--dsw-alias-bg-tertiary, rgba(255, 255, 255, 0.05));
-  border: 1px solid var(--dsw-alias-border-l2, rgba(255, 255, 255, 0.1));
+  background: var(--dsw-alias-bg-tertiary, rgba(125, 125, 125, 0.08));
+  border: 1px solid var(--dsw-alias-border-l2, rgba(125, 125, 125, 0.2));
   border-radius: 6px;
   padding: 4px 8px;
   font-size: 11.5px;
-  color: var(--dsw-alias-label-primary, #ffffff);
+  color: var(--dsw-alias-label-primary, inherit);
   outline: none;
   transition: border-color 0.15s ease;
 }
@@ -113,9 +113,9 @@
 
 .tabs {
   display: flex;
-  background: var(--dsw-alias-bg-tertiary, rgba(255, 255, 255, 0.05));
+  background: var(--dsw-alias-interactive-bg-hover, rgba(125, 125, 125, 0.12));
   padding: 2px;
-  border-radius: 5px;
+  border-radius: 6px;
   gap: 2px;
 }
 
@@ -123,10 +123,10 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: var(--dsw-alias-label-secondary, #94a3b8);
-  font-size: 10.5px;
+  color: var(--dsw-alias-label-secondary, #64748b);
+  font-size: 11px;
   font-weight: 500;
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
@@ -134,13 +134,14 @@
 }
 
 .tabBtn:hover {
-  color: var(--dsw-alias-label-primary, #ffffff);
+  color: var(--dsw-alias-label-primary, inherit);
 }
 
 .tabBtnActive {
-  background: var(--dsw-alias-interactive-bg-hover-solid, rgba(255, 255, 255, 0.14));
-  color: #ffffff !important;
+  background: var(--dsw-alias-interactive-bg-hover-solid, rgba(125, 125, 125, 0.22));
+  color: var(--dsw-alias-label-primary, inherit) !important;
   font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 /* Single Scrollable List */
@@ -218,7 +219,7 @@
 .itemName {
   font-size: 12.5px;
   font-weight: 500;
-  color: var(--dsw-alias-label-primary, #ffffff);
+  color: var(--dsw-alias-label-primary, inherit);
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
