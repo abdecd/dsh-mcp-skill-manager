@@ -256,7 +256,7 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
             {(activeTab === 'all' || activeTab === 'project') && (
               <div>
                 <div className={styles.groupTitle}>
-                  <span>📁 项目级技能</span>
+                  <span>项目级技能</span>
                   {data?.projectRoot && (
                     <span className={styles.groupSubtitle} title={data.projectRoot}>
                       {data.projectRoot}
@@ -324,7 +324,7 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
               <div>
                 {/* 2.1 Global MCPs */}
                 <div className={styles.groupTitle}>
-                  <span>🔌 全局 MCP 服务 (~/.dsh/cordis.patch.yml)</span>
+                  <span>全局 MCP 服务 (~/.dsh/cordis.patch.yml)</span>
                 </div>
 
                 {filteredGlobalMcps.length === 0 ? (
@@ -379,7 +379,7 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
 
                 {/* 2.2 Global Skills */}
                 <div className={styles.groupTitle} style={{ marginTop: '8px' }}>
-                  <span>⚡ 全局技能 (~/.agents/skills 或 ~/.dsh/skills)</span>
+                  <span>全局技能 (~/.agents/skills 或 ~/.dsh/skills)</span>
                 </div>
 
                 {filteredGlobalSkills.length === 0 ? (
@@ -438,12 +438,6 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
         )}
       </div>
 
-      {/* Footer */}
-      <div className={styles.footer}>
-        <div className={styles.footerTip}>
-          <span>💡 停用技能移至 skills-disable；停用 MCP 写入 disabled: true</span>
-        </div>
-      </div>
     </div>
   )
 }

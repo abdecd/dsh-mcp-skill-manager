@@ -7,7 +7,7 @@ window.__ModuleLoader__.load({
 		let react = require("react");
 		let react_jsx_runtime = require("react/jsx-runtime");
 		//#region \0dsh-css:/run/media/user1/78E6859DE6855BEE/code/js/dsh-mcp-skill-manager/src/client/McpSkillManager.module.css.mjs
-		const css = ".VlMPOq_popoverMenu{background:var(--dsw-specific-menu,#1e1e24);width:380px;max-width:min(420px,92vw);max-height:min(480px,75vh);color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l1,#ffffff1f);box-shadow:var(--dsw-elevation-prominent,0 16px 36px #00000080);z-index:1000;box-sizing:border-box;border-radius:18px;flex-direction:column;animation:.12s cubic-bezier(.16,1,.3,1) VlMPOq_popoverFadeIn;display:flex;position:absolute;bottom:calc(100% + 8px);right:0;overflow:hidden}@keyframes VlMPOq_popoverFadeIn{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);flex:none;justify-content:space-between;align-items:center;padding:10px 14px 8px;display:flex}.VlMPOq_titleArea{align-items:center;gap:6px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,#fff);margin:0;font-size:13px;font-weight:600}.VlMPOq_headerActions{align-items:center;gap:4px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;width:24px;height:24px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);flex-direction:column;flex:none;gap:8px;padding:8px 12px;display:flex}.VlMPOq_searchInput{box-sizing:border-box;background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);width:100%;color:var(--dsw-alias-label-primary,#fff);border-radius:8px;outline:none;padding:5px 10px;font-size:12px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:6px;gap:2px;padding:2px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;text-align:center;background:0 0;border:none;border-radius:5px;flex:1;padding:3px 6px;font-size:11px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:#fff!important}.VlMPOq_groups{flex-direction:column;flex:1;gap:12px;min-height:0;padding:4px 6px;display:flex;overflow-y:auto}.VlMPOq_groups::-webkit-scrollbar{width:5px}.VlMPOq_groups::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_groups::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_groupTitle{z-index:2;background:var(--dsw-specific-menu,#1e1e24);color:var(--dsw-alias-label-tertiary,#94a3b8);letter-spacing:.3px;justify-content:space-between;align-items:center;padding:4px 6px 2px;font-size:11px;font-weight:600;line-height:16px;display:flex;position:sticky;top:0}.VlMPOq_groupSubtitle{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;max-width:180px;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_cardList{flex-direction:column;gap:4px;display:flex}.VlMPOq_itemCard{box-sizing:border-box;background:0 0;border:1px solid #0000;border-radius:8px;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:6px 8px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff0d);border-color:var(--dsw-alias-border-l2,#ffffff14)}.VlMPOq_itemCardDisabled{opacity:.6}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;gap:2px;min-width:0;display:flex}.VlMPOq_itemTitleRow{flex-wrap:wrap;align-items:center;gap:6px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,#fff);text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:500;overflow:hidden}.VlMPOq_itemBadge{border-radius:4px;padding:0 5px;font-size:10px;font-weight:500;line-height:15px}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f626}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f726}.VlMPOq_badgeMcp{color:#fbbf24;background:#f59e0b26}.VlMPOq_badgeActive{color:#4ade80;background:#22c55e26}.VlMPOq_badgeInactive{color:#94a3b8;background:#94a3b826}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:15px;overflow:hidden}.VlMPOq_itemExtra{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_itemAction{flex:none;align-items:center;display:flex}.VlMPOq_switchTrack{cursor:pointer;background:#ffffff2e;border:1px solid #0000;border-radius:999px;width:34px;height:18px;transition:background-color .2s cubic-bezier(.16,1,.3,1);position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;width:14px;height:14px;transition:transform .2s cubic-bezier(.16,1,.3,1);position:absolute;top:1px;left:2px;box-shadow:0 1px 2px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(16px)}.VlMPOq_loadingSpinner{border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:10px;height:10px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);padding:10px;font-size:12px}.VlMPOq_footer{border-top:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);color:var(--dsw-alias-label-tertiary,#64748b);flex:none;justify-content:space-between;align-items:center;padding:8px 12px;font-size:11px;display:flex}.VlMPOq_footerTip{text-overflow:ellipsis;white-space:nowrap;align-items:center;gap:4px;display:flex;overflow:hidden}";
+		const css = ".VlMPOq_popoverMenu{background:var(--dsw-specific-menu,#1e1e24);width:380px;max-width:min(420px,92vw);max-height:min(480px,75vh);color:var(--dsw-alias-label-primary,#e2e8f0);border:1px solid var(--dsw-alias-border-l1,#ffffff1f);box-shadow:var(--dsw-elevation-prominent,0 16px 36px #00000080);z-index:1000;box-sizing:border-box;border-radius:18px;flex-direction:column;animation:.12s cubic-bezier(.16,1,.3,1) VlMPOq_popoverFadeIn;display:flex;position:absolute;bottom:calc(100% + 8px);right:0;overflow:hidden}@keyframes VlMPOq_popoverFadeIn{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:translateY(0)scale(1)}}.VlMPOq_header{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff14);background:var(--dsw-alias-bg-secondary,#ffffff05);flex:none;justify-content:space-between;align-items:center;padding:10px 14px 8px;display:flex}.VlMPOq_titleArea{align-items:center;gap:6px;display:flex}.VlMPOq_title{color:var(--dsw-alias-label-primary,#fff);margin:0;font-size:13px;font-weight:600}.VlMPOq_headerActions{align-items:center;gap:4px;display:flex}.VlMPOq_iconBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;width:24px;height:24px;padding:0;transition:all .12s;display:flex}.VlMPOq_iconBtn:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff14);color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_filterBar{border-bottom:1px solid var(--dsw-alias-border-l2,#ffffff0f);flex-direction:column;flex:none;gap:8px;padding:8px 12px;display:flex}.VlMPOq_searchInput{box-sizing:border-box;background:var(--dsw-alias-bg-tertiary,#ffffff0d);border:1px solid var(--dsw-alias-border-l2,#ffffff1a);width:100%;color:var(--dsw-alias-label-primary,#fff);border-radius:8px;outline:none;padding:5px 10px;font-size:12px;transition:border-color .15s}.VlMPOq_searchInput:focus{border-color:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_searchInput::placeholder{color:var(--dsw-alias-label-tertiary,#64748b)}.VlMPOq_tabs{background:var(--dsw-alias-bg-tertiary,#ffffff0d);border-radius:6px;gap:2px;padding:2px;display:flex}.VlMPOq_tabBtn{color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;text-align:center;background:0 0;border:none;border-radius:5px;flex:1;padding:3px 6px;font-size:11px;font-weight:500;transition:all .12s}.VlMPOq_tabBtn:hover{color:var(--dsw-alias-label-primary,#fff)}.VlMPOq_tabBtnActive{background:var(--dsw-alias-interactive-bg-hover-solid,#ffffff24);font-weight:600;color:#fff!important}.VlMPOq_groups{flex-direction:column;flex:1;gap:12px;min-height:0;padding:4px 6px 10px;display:flex;overflow-y:auto}.VlMPOq_groups::-webkit-scrollbar{width:5px}.VlMPOq_groups::-webkit-scrollbar-thumb{background:#ffffff26;border-radius:999px}.VlMPOq_groups::-webkit-scrollbar-thumb:hover{background:#ffffff40}.VlMPOq_groupTitle{z-index:2;background:var(--dsw-specific-menu,#1e1e24);color:var(--dsw-alias-label-tertiary,#94a3b8);letter-spacing:.3px;justify-content:space-between;align-items:center;padding:4px 6px 2px;font-size:11px;font-weight:600;line-height:16px;display:flex;position:sticky;top:0}.VlMPOq_groupSubtitle{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;max-width:180px;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_cardList{flex-direction:column;gap:4px;display:flex}.VlMPOq_itemCard{box-sizing:border-box;background:0 0;border:1px solid #0000;border-radius:8px;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:6px 8px;transition:all .12s;display:flex}.VlMPOq_itemCard:hover{background:var(--dsw-alias-interactive-bg-hover,#ffffff0d);border-color:var(--dsw-alias-border-l2,#ffffff14)}.VlMPOq_itemCardDisabled{opacity:.6}.VlMPOq_itemCardDisabled:hover{opacity:.85}.VlMPOq_itemInfo{flex-direction:column;flex:1;gap:2px;min-width:0;display:flex}.VlMPOq_itemTitleRow{flex-wrap:wrap;align-items:center;gap:6px;display:flex}.VlMPOq_itemName{color:var(--dsw-alias-label-primary,#fff);text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:500;overflow:hidden}.VlMPOq_itemBadge{border-radius:4px;padding:0 5px;font-size:10px;font-weight:500;line-height:15px}.VlMPOq_badgeProject{color:#60a5fa;background:#3b82f626}.VlMPOq_badgeGlobal{color:#c084fc;background:#a855f726}.VlMPOq_badgeMcp{color:#fbbf24;background:#f59e0b26}.VlMPOq_badgeActive{color:#4ade80;background:#22c55e26}.VlMPOq_badgeInactive{color:#94a3b8;background:#94a3b826}.VlMPOq_itemDesc{color:var(--dsw-alias-label-secondary,#94a3b8);text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:15px;overflow:hidden}.VlMPOq_itemExtra{color:var(--dsw-alias-label-tertiary,#64748b);text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:10px;overflow:hidden}.VlMPOq_itemAction{flex:none;align-items:center;display:flex}.VlMPOq_switchTrack{cursor:pointer;background:#ffffff2e;border:1px solid #0000;border-radius:999px;width:34px;height:18px;transition:background-color .2s cubic-bezier(.16,1,.3,1);position:relative}.VlMPOq_switchTrackChecked{background:var(--dsw-alias-state-business-primary,#3b82f6)}.VlMPOq_switchTrackDisabled{cursor:not-allowed;opacity:.5}.VlMPOq_switchThumb{background:#fff;border-radius:50%;width:14px;height:14px;transition:transform .2s cubic-bezier(.16,1,.3,1);position:absolute;top:1px;left:2px;box-shadow:0 1px 2px #0000004d}.VlMPOq_switchThumbChecked{transform:translate(16px)}.VlMPOq_loadingSpinner{border:1.5px solid #ffffff4d;border-top-color:#fff;border-radius:50%;width:10px;height:10px;animation:.6s linear infinite VlMPOq_spin}@keyframes VlMPOq_spin{to{transform:rotate(360deg)}}.VlMPOq_emptyState{text-align:center;color:var(--dsw-alias-label-tertiary,#64748b);padding:10px;font-size:12px}";
 		const tagId = "dsh-mcp-skill-manager/McpSkillManager.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
 			const tag = document.createElement("style");
@@ -17,46 +17,44 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
-			"cardList": "VlMPOq_cardList",
+			"itemExtra": "VlMPOq_itemExtra",
+			"itemInfo": "VlMPOq_itemInfo",
+			"tabBtn": "VlMPOq_tabBtn",
+			"popoverFadeIn": "VlMPOq_popoverFadeIn",
+			"groupSubtitle": "VlMPOq_groupSubtitle",
+			"itemName": "VlMPOq_itemName",
+			"badgeProject": "VlMPOq_badgeProject",
+			"groups": "VlMPOq_groups",
+			"badgeGlobal": "VlMPOq_badgeGlobal",
+			"groupTitle": "VlMPOq_groupTitle",
+			"switchThumbChecked": "VlMPOq_switchThumbChecked",
+			"spin": "VlMPOq_spin",
+			"loadingSpinner": "VlMPOq_loadingSpinner",
+			"popoverMenu": "VlMPOq_popoverMenu",
+			"itemDesc": "VlMPOq_itemDesc",
+			"itemCardDisabled": "VlMPOq_itemCardDisabled",
+			"switchTrack": "VlMPOq_switchTrack",
+			"tabs": "VlMPOq_tabs",
+			"titleArea": "VlMPOq_titleArea",
+			"searchInput": "VlMPOq_searchInput",
+			"tabBtnActive": "VlMPOq_tabBtnActive",
+			"itemCard": "VlMPOq_itemCard",
+			"itemTitleRow": "VlMPOq_itemTitleRow",
+			"filterBar": "VlMPOq_filterBar",
+			"itemBadge": "VlMPOq_itemBadge",
+			"switchTrackChecked": "VlMPOq_switchTrackChecked",
+			"switchThumb": "VlMPOq_switchThumb",
+			"badgeMcp": "VlMPOq_badgeMcp",
+			"emptyState": "VlMPOq_emptyState",
+			"itemAction": "VlMPOq_itemAction",
 			"badgeActive": "VlMPOq_badgeActive",
 			"iconBtn": "VlMPOq_iconBtn",
 			"header": "VlMPOq_header",
-			"tabs": "VlMPOq_tabs",
-			"itemInfo": "VlMPOq_itemInfo",
-			"itemBadge": "VlMPOq_itemBadge",
-			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
-			"titleArea": "VlMPOq_titleArea",
-			"footerTip": "VlMPOq_footerTip",
-			"badgeProject": "VlMPOq_badgeProject",
-			"badgeGlobal": "VlMPOq_badgeGlobal",
 			"badgeInactive": "VlMPOq_badgeInactive",
-			"groupTitle": "VlMPOq_groupTitle",
-			"tabBtnActive": "VlMPOq_tabBtnActive",
-			"popoverMenu": "VlMPOq_popoverMenu",
-			"groups": "VlMPOq_groups",
-			"switchTrack": "VlMPOq_switchTrack",
-			"itemDesc": "VlMPOq_itemDesc",
-			"itemName": "VlMPOq_itemName",
-			"spin": "VlMPOq_spin",
-			"title": "VlMPOq_title",
-			"footer": "VlMPOq_footer",
-			"switchTrackChecked": "VlMPOq_switchTrackChecked",
-			"itemCard": "VlMPOq_itemCard",
-			"switchThumbChecked": "VlMPOq_switchThumbChecked",
-			"switchThumb": "VlMPOq_switchThumb",
-			"searchInput": "VlMPOq_searchInput",
 			"headerActions": "VlMPOq_headerActions",
-			"loadingSpinner": "VlMPOq_loadingSpinner",
-			"itemTitleRow": "VlMPOq_itemTitleRow",
-			"itemExtra": "VlMPOq_itemExtra",
-			"tabBtn": "VlMPOq_tabBtn",
-			"groupSubtitle": "VlMPOq_groupSubtitle",
-			"filterBar": "VlMPOq_filterBar",
-			"popoverFadeIn": "VlMPOq_popoverFadeIn",
-			"itemAction": "VlMPOq_itemAction",
-			"emptyState": "VlMPOq_emptyState",
-			"badgeMcp": "VlMPOq_badgeMcp",
-			"itemCardDisabled": "VlMPOq_itemCardDisabled"
+			"title": "VlMPOq_title",
+			"cardList": "VlMPOq_cardList",
+			"switchTrackDisabled": "VlMPOq_switchTrackDisabled"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -319,7 +317,7 @@ window.__ModuleLoader__.load({
 							children: ["加载失败: ", error]
 						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [(activeTab === "all" || activeTab === "project") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							className: McpSkillManager_module_css_default.groupTitle,
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "📁 项目级技能" }), data?.projectRoot && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "项目级技能" }), data?.projectRoot && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
 								className: McpSkillManager_module_css_default.groupSubtitle,
 								title: data.projectRoot,
 								children: data.projectRoot
@@ -380,7 +378,7 @@ window.__ModuleLoader__.load({
 						})] }), (activeTab === "all" || activeTab === "global") && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [
 							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 								className: McpSkillManager_module_css_default.groupTitle,
-								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "🔌 全局 MCP 服务 (~/.dsh/cordis.patch.yml)" })
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "全局 MCP 服务 (~/.dsh/cordis.patch.yml)" })
 							}),
 							filteredGlobalMcps.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 								className: McpSkillManager_module_css_default.emptyState,
@@ -435,7 +433,7 @@ window.__ModuleLoader__.load({
 							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 								className: McpSkillManager_module_css_default.groupTitle,
 								style: { marginTop: "8px" },
-								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "⚡ 全局技能 (~/.agents/skills 或 ~/.dsh/skills)" })
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "全局技能 (~/.agents/skills 或 ~/.dsh/skills)" })
 							}),
 							filteredGlobalSkills.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 								className: McpSkillManager_module_css_default.emptyState,
@@ -492,13 +490,6 @@ window.__ModuleLoader__.load({
 								})
 							})
 						] })] })
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-						className: McpSkillManager_module_css_default.footer,
-						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-							className: McpSkillManager_module_css_default.footerTip,
-							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "💡 停用技能移至 skills-disable；停用 MCP 写入 disabled: true" })
-						})
 					})
 				]
 			});
@@ -508,7 +499,6 @@ window.__ModuleLoader__.load({
 		function McpSkillButton({ rpc, sessionId }) {
 			const [open, setOpen] = (0, react.useState)(false);
 			const [hovered, setHovered] = (0, react.useState)(false);
-			const [tooltipVisible, setTooltipVisible] = (0, react.useState)(false);
 			const rootRef = (0, react.useRef)(null);
 			(0, react.useEffect)(() => {
 				if (!open) return;
@@ -527,16 +517,8 @@ window.__ModuleLoader__.load({
 			}, [open]);
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
 				ref: rootRef,
-				onMouseEnter: () => {
-					setHovered(true);
-					setTooltipVisible(true);
-				},
-				onMouseLeave: () => {
-					setHovered(false);
-					setTooltipVisible(false);
-				},
-				onFocus: () => setTooltipVisible(true),
-				onBlur: () => setTooltipVisible(false),
+				onMouseEnter: () => setHovered(true),
+				onMouseLeave: () => setHovered(false),
 				style: {
 					display: "inline-flex",
 					position: "relative",
@@ -545,90 +527,66 @@ window.__ModuleLoader__.load({
 					alignItems: "center",
 					justifyContent: "center"
 				},
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						title: "MCP & Skills 管理",
-						"aria-label": "MCP & Skills 管理",
-						"aria-haspopup": "true",
-						"aria-expanded": open,
-						onClick: () => setOpen((prev) => !prev),
-						style: {
-							display: "inline-flex",
-							alignItems: "center",
-							justifyContent: "center",
-							width: 30,
-							height: 30,
-							padding: 0,
-							border: 0,
-							borderRadius: 8,
-							background: open ? "var(--dsw-alias-interactive-bg-hover-solid, rgba(255, 255, 255, 0.16))" : hovered ? "var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.08))" : "transparent",
-							color: open ? "var(--dsw-alias-state-business-primary, #3b82f6)" : hovered ? "var(--dsw-alias-label-primary, #ffffff)" : "var(--dsw-alias-label-secondary, #94a3b8)",
-							cursor: "pointer",
-							transition: "all 0.15s ease"
-						},
-						children: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
-							width: "16",
-							height: "16",
-							viewBox: "0 0 24 24",
-							fill: "none",
-							stroke: "currentColor",
-							strokeWidth: "1.8",
-							strokeLinecap: "round",
-							strokeLinejoin: "round",
-							"aria-hidden": "true",
-							children: [
-								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
-									x: "3",
-									y: "3",
-									width: "7",
-									height: "7",
-									rx: "1.5"
-								}),
-								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
-									x: "14",
-									y: "3",
-									width: "7",
-									height: "7",
-									rx: "1.5"
-								}),
-								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
-									x: "3",
-									y: "14",
-									width: "7",
-									height: "7",
-									rx: "1.5"
-								}),
-								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M14 17.5h7M17.5 14v7" })
-							]
-						})
-					}),
-					tooltipVisible && !open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						role: "tooltip",
-						style: {
-							position: "absolute",
-							left: "50%",
-							bottom: "calc(100% + 8px)",
-							zIndex: 1e3,
-							transform: "translateX(-50%)",
-							padding: "4px 8px",
-							borderRadius: 6,
-							background: "var(--dsw-specific-tip, #1f2329)",
-							boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-							color: "var(--dsw-alias-label-primary, #fff)",
-							fontSize: 12,
-							lineHeight: "18px",
-							whiteSpace: "nowrap",
-							pointerEvents: "none"
-						},
-						children: "MCP & Skills 管理"
-					}),
-					open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillPopover, {
-						rpc,
-						sessionId,
-						onClose: () => setOpen(false)
+				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+					type: "button",
+					"aria-label": "MCP & Skills 管理",
+					"aria-haspopup": "true",
+					"aria-expanded": open,
+					onClick: () => setOpen((prev) => !prev),
+					style: {
+						display: "inline-flex",
+						alignItems: "center",
+						justifyContent: "center",
+						width: 30,
+						height: 30,
+						padding: 0,
+						border: 0,
+						borderRadius: 8,
+						background: open ? "var(--dsw-alias-interactive-bg-hover-solid, rgba(255, 255, 255, 0.16))" : hovered ? "var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.08))" : "transparent",
+						color: open ? "var(--dsw-alias-state-business-primary, #3b82f6)" : hovered ? "var(--dsw-alias-label-primary, #ffffff)" : "var(--dsw-alias-label-secondary, #94a3b8)",
+						cursor: "pointer",
+						transition: "all 0.15s ease"
+					},
+					children: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
+						width: "16",
+						height: "16",
+						viewBox: "0 0 24 24",
+						fill: "none",
+						stroke: "currentColor",
+						strokeWidth: "1.8",
+						strokeLinecap: "round",
+						strokeLinejoin: "round",
+						"aria-hidden": "true",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
+								x: "3",
+								y: "3",
+								width: "7",
+								height: "7",
+								rx: "1.5"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
+								x: "14",
+								y: "3",
+								width: "7",
+								height: "7",
+								rx: "1.5"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("rect", {
+								x: "3",
+								y: "14",
+								width: "7",
+								height: "7",
+								rx: "1.5"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M14 17.5h7M17.5 14v7" })
+						]
 					})
-				]
+				}), open && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(McpSkillPopover, {
+					rpc,
+					sessionId,
+					onClose: () => setOpen(false)
+				})]
 			});
 		}
 		//#endregion

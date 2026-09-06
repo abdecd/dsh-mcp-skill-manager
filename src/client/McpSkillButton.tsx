@@ -9,10 +9,9 @@ export interface McpSkillButtonProps {
 export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNode {
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState(false)
-  const [tooltipVisible, setTooltipVisible] = useState(false)
   const rootRef = useRef<HTMLSpanElement>(null)
 
-  // Close when clicking outside or pressing Escape (just like ModelSelect)
+  // Close when clicking outside or pressing Escape
   useEffect(() => {
     if (!open) return
     const handleClickOutside = (e: MouseEvent) => {
@@ -36,16 +35,8 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
   return (
     <span
       ref={rootRef}
-      onMouseEnter={() => {
-        setHovered(true)
-        setTooltipVisible(true)
-      }}
-      onMouseLeave={() => {
-        setHovered(false)
-        setTooltipVisible(false)
-      }}
-      onFocus={() => setTooltipVisible(true)}
-      onBlur={() => setTooltipVisible(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         display: 'inline-flex',
         position: 'relative',
@@ -57,7 +48,6 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
     >
       <button
         type="button"
-        title="MCP & Skills 管理"
         aria-label="MCP & Skills 管理"
         aria-haspopup="true"
         aria-expanded={open}
@@ -103,30 +93,6 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
           <path d="M14 17.5h7M17.5 14v7" />
         </svg>
       </button>
-
-      {tooltipVisible && !open && (
-        <span
-          role="tooltip"
-          style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: 'calc(100% + 8px)',
-            zIndex: 1000,
-            transform: 'translateX(-50%)',
-            padding: '4px 8px',
-            borderRadius: 6,
-            background: 'var(--dsw-specific-tip, #1f2329)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            color: 'var(--dsw-alias-label-primary, #fff)',
-            fontSize: 12,
-            lineHeight: '18px',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}
-        >
-          MCP & Skills 管理
-        </span>
-      )}
 
       {/* ModelSelect-style anchored popover menu */}
       {open && (
