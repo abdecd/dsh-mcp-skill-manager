@@ -51,6 +51,61 @@ test('skill directory movement toggles activation cleanly', () => {
   fs.rmSync(tmpRoot, { recursive: true, force: true })
 })
 
+test('does not duplicate project skills when project and global parents match', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-home-skill-'))
+  const dshHome = path.join(tmpRoot, '.dsh')
+  const agentsHome = path.join(tmpRoot, '.agents')
+  const previousDshHome = process.env.DSH_HOME
+  const previousAgentsHome = process.env.DSH_AGENTS_HOME
+
+  fs.mkdirSync(path.join(dshHome, 'skills', 'home-dsh-skill'), { recursive: true })
+  fs.mkdirSync(path.join(agentsHome, 'skills', 'home-agents-skill'), { recursive: true })
+  fs.writeFileSync(path.join(dshHome, 'skills', 'home-dsh-skill', 'SKILL.md'), '# DSH', 'utf8')
+  fs.writeFileSync(path.join(agentsHome, 'skills', 'home-agents-skill', 'SKILL.md'), '# Agents', 'utf8')
+  fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+  process.env.DSH_HOME = dshHome
+  process.env.DSH_AGENTS_HOME = agentsHome
+
+  let rpcHandler = null
+  const mockCtx = {
+    get(name) {
+      if (name === 'connection') {
+        return {
+          rpc: {
+            handle(channel, handler) {
+              if (channel === '/mcp-skill-manager') rpcHandler = handler
+            },
+          },
+        }
+      }
+      if (name === 'workspaceRegistry') {
+        return { list: () => [{ path: tmpRoot }] }
+      }
+      return undefined
+    },
+  }
+
+  try {
+    plugin.apply(mockCtx)
+    assert.ok(typeof rpcHandler === 'function', 'rpc handler should be registered')
+
+    const result = await rpcHandler('list', { sessionId: 'home-session' })
+    assert.strictEqual(result.ok, true)
+    assert.deepStrictEqual(result.value.projectSkills, [])
+    assert.deepStrictEqual(
+      result.value.globalSkills.map((item) => item.filename).sort(),
+      ['home-agents-skill', 'home-dsh-skill'],
+    )
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    if (previousAgentsHome === undefined) delete process.env.DSH_AGENTS_HOME
+    else process.env.DSH_AGENTS_HOME = previousAgentsHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
 test('rpc handler supports open-folder endpoint', async () => {
   let rpcHandler = null
   const mockCtx = {

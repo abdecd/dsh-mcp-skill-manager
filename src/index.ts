@@ -162,6 +162,12 @@ async function collectSkillsForParent(
   return Array.from(map.values())
 }
 
+/** Normalize a skill parent for duplicate detection across project/global scopes. */
+function skillParentKey(parentDir: string): string {
+  const resolved = path.resolve(parentDir)
+  return process.platform === 'win32' ? resolved.toLowerCase() : resolved
+}
+
 /** Read global MCP definitions from ~/.dsh/cordis.patch.yml */
 async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
   const mcps: McpItem[] = []
@@ -342,9 +348,20 @@ export function apply(ctx: Context): void {
             const projectRoot = await findProjectRoot(cwd)
 
             // 1. Project-level skills
+            // When the workspace is ~, ~/.dsh and ~/.agents are also the global
+            // parents. Scan those directories only once and expose them as global.
+            const globalSkillParents = new Set(
+              [dshHome, agentsHome].map((parentDir) => skillParentKey(parentDir)),
+            )
+            const projectDshParent = path.join(projectRoot, '.dsh')
+            const projectAgentsParent = path.join(projectRoot, '.agents')
             const [projectDshSkills, projectAgentsSkills] = await Promise.all([
-              collectSkillsForParent(path.join(projectRoot, '.dsh'), 'project', 'project-dsh'),
-              collectSkillsForParent(path.join(projectRoot, '.agents'), 'project', 'project-agents'),
+              globalSkillParents.has(skillParentKey(projectDshParent))
+                ? Promise.resolve([] as SkillItem[])
+                : collectSkillsForParent(projectDshParent, 'project', 'project-dsh'),
+              globalSkillParents.has(skillParentKey(projectAgentsParent))
+                ? Promise.resolve([] as SkillItem[])
+                : collectSkillsForParent(projectAgentsParent, 'project', 'project-agents'),
             ])
             const projectSkills = [...projectDshSkills, ...projectAgentsSkills]
 
