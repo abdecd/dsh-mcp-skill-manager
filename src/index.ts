@@ -2,6 +2,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import * as os from 'node:os'
+import { spawn } from 'node:child_process'
 import { parseDocument, parse as parseYaml, isSeq, isMap } from 'yaml'
 import {
   RPC_CHANNEL,
@@ -207,6 +208,7 @@ async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
                     args,
                     enabled: !disabled,
                     scope: 'global',
+                    configPath: cordisPatchPath,
                   })
                 }
               }
@@ -262,6 +264,31 @@ async function toggleMcp(cordisPatchPath: string, payload: ToggleMcpPayload): Pr
     return true
   }
   throw new Error(`MCP server not found in cordis.patch.yml: ${payload.id || payload.serverName}`)
+}
+
+/** Open a target file or folder in the host OS default file manager */
+async function openNativeFolder(targetPath: string): Promise<boolean> {
+  let folderToOpen = path.resolve(targetPath)
+  try {
+    const st = await fs.promises.stat(folderToOpen)
+    if (!st.isDirectory()) {
+      folderToOpen = path.dirname(folderToOpen)
+    }
+  } catch {
+    folderToOpen = path.dirname(folderToOpen)
+  }
+
+  const platform = process.platform
+  if (platform === 'darwin') {
+    spawn('open', [folderToOpen], { detached: true, stdio: 'ignore' }).unref()
+    return true
+  }
+  if (platform === 'win32') {
+    spawn('explorer.exe', [folderToOpen], { detached: true, stdio: 'ignore' }).unref()
+    return true
+  }
+  spawn('xdg-open', [folderToOpen], { detached: true, stdio: 'ignore' }).unref()
+  return true
 }
 
 /** Move a skill between skills and skills-disable */
@@ -349,6 +376,15 @@ export function apply(ctx: Context): void {
           if (endpoint === 'toggle-mcp') {
             await toggleMcp(cordisPatchPath, payload as ToggleMcpPayload)
             return { ok: true, value: { enabled: payload.enabled } }
+          }
+
+          if (endpoint === 'open-folder') {
+            const targetPath = String(payload?.path ?? '')
+            if (targetPath) {
+              await openNativeFolder(targetPath)
+              return { ok: true, value: { opened: true } }
+            }
+            return { ok: false, error: { code: 'bad-request', message: 'Path is required' } }
           }
 
           return {

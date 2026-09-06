@@ -31,6 +31,7 @@ export interface McpItem {
   url?: string | undefined
   enabled: boolean
   scope: 'global'
+  configPath?: string | undefined
 }
 
 export interface ManagerData {
@@ -52,6 +53,10 @@ export interface ToggleMcpPayload {
   id: string
   serverName?: string | undefined
   enabled: boolean
+}
+
+export interface OpenFolderPayload {
+  path: string
 }
 
 export type RpcResult<T> =

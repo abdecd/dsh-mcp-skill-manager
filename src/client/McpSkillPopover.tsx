@@ -90,6 +90,16 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
     }
   }
 
+  // Open folder in OS default file manager
+  const handleOpenFolder = async (targetPath?: string) => {
+    if (!targetPath) return
+    try {
+      await rpc.call('/mcp-skill-manager', 'open-folder', { path: targetPath })
+    } catch (err: any) {
+      console.warn('[dsh-mcp-skill-manager] 打开文件夹失败:', err)
+    }
+  }
+
   // Toggle MCP
   const handleToggleMcp = async (mcp: McpItem) => {
     if (togglingIds.has(mcp.id)) return
@@ -286,6 +296,8 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                   <div
                     key={skill.id}
                     className={`${styles.itemCard} ${!skill.enabled ? styles.itemCardDisabled : ''}`}
+                    onClick={() => handleOpenFolder(skill.path)}
+                    title={`点击打开对应文件夹:\n${skill.path}`}
                   >
                     <div className={styles.itemInfo}>
                       <div className={styles.itemTitleRow}>
@@ -309,7 +321,7 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                         </div>
                       ) : null}
                     </div>
-                    <div className={styles.itemAction}>
+                    <div className={styles.itemAction} onClick={(e) => e.stopPropagation()}>
                       <Switch
                         checked={skill.enabled}
                         loading={isToggling}
@@ -327,6 +339,8 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                   <div
                     key={mcp.id}
                     className={`${styles.itemCard} ${!mcp.enabled ? styles.itemCardDisabled : ''}`}
+                    onClick={() => handleOpenFolder(mcp.configPath || undefined)}
+                    title={`点击打开配置文件所在目录:\n${mcp.configPath || '~/.dsh/cordis.patch.yml'}`}
                   >
                     <div className={styles.itemInfo}>
                       <div className={styles.itemTitleRow}>
@@ -353,7 +367,7 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                         {mcp.url ? ` · ${mcp.url}` : ''}
                       </div>
                     </div>
-                    <div className={styles.itemAction}>
+                    <div className={styles.itemAction} onClick={(e) => e.stopPropagation()}>
                       <Switch
                         checked={mcp.enabled}
                         loading={isToggling}

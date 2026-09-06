@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
+import { spawn } from "node:child_process";
 //#region \0rolldown/runtime.js
 var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
 var __require = /* #__PURE__ */ (() => createRequire(import.meta.url))();
@@ -6805,7 +6806,8 @@ async function readGlobalMcps(cordisPatchPath) {
 								url,
 								args,
 								enabled: !disabled,
-								scope: "global"
+								scope: "global",
+								configPath: cordisPatchPath
 							});
 						}
 					}
@@ -6847,6 +6849,35 @@ async function toggleMcp(cordisPatchPath, payload) {
 		return true;
 	}
 	throw new Error(`MCP server not found in cordis.patch.yml: ${payload.id || payload.serverName}`);
+}
+/** Open a target file or folder in the host OS default file manager */
+async function openNativeFolder(targetPath) {
+	let folderToOpen = path.resolve(targetPath);
+	try {
+		if (!(await fs.promises.stat(folderToOpen)).isDirectory()) folderToOpen = path.dirname(folderToOpen);
+	} catch {
+		folderToOpen = path.dirname(folderToOpen);
+	}
+	const platform = process.platform;
+	if (platform === "darwin") {
+		spawn("open", [folderToOpen], {
+			detached: true,
+			stdio: "ignore"
+		}).unref();
+		return true;
+	}
+	if (platform === "win32") {
+		spawn("explorer.exe", [folderToOpen], {
+			detached: true,
+			stdio: "ignore"
+		}).unref();
+		return true;
+	}
+	spawn("xdg-open", [folderToOpen], {
+		detached: true,
+		stdio: "ignore"
+	}).unref();
+	return true;
 }
 /** Move a skill between skills and skills-disable */
 async function toggleSkill(payload) {
@@ -6912,6 +6943,23 @@ function apply(ctx) {
 				return {
 					ok: true,
 					value: { enabled: payload.enabled }
+				};
+			}
+			if (endpoint === "open-folder") {
+				const targetPath = String(payload?.path ?? "");
+				if (targetPath) {
+					await openNativeFolder(targetPath);
+					return {
+						ok: true,
+						value: { opened: true }
+					};
+				}
+				return {
+					ok: false,
+					error: {
+						code: "bad-request",
+						message: "Path is required"
+					}
 				};
 			}
 			return {

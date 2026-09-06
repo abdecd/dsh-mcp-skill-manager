@@ -50,3 +50,35 @@ test('skill directory movement toggles activation cleanly', () => {
 
   fs.rmSync(tmpRoot, { recursive: true, force: true })
 })
+
+test('rpc handler supports open-folder endpoint', async () => {
+  let rpcHandler = null
+  const mockCtx = {
+    get(name) {
+      if (name === 'connection') {
+        return {
+          rpc: {
+            handle(channel, handler) {
+              if (channel === '/mcp-skill-manager') {
+                rpcHandler = handler
+              }
+            }
+          }
+        }
+      }
+      return undefined
+    }
+  }
+
+  plugin.apply(mockCtx)
+  assert.ok(typeof rpcHandler === 'function', 'rpc handler should be registered')
+
+  // Calling open-folder without path returns bad-request
+  const badRes = await rpcHandler('open-folder', {})
+  assert.strictEqual(badRes.ok, false)
+
+  // Calling open-folder with tmp path succeeds
+  const goodRes = await rpcHandler('open-folder', { path: '/tmp' })
+  assert.strictEqual(goodRes.ok, true)
+  assert.strictEqual(goodRes.value.opened, true)
+})
