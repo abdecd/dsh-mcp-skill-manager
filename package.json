@@ -4,6 +4,7 @@
   "description": "DeepSeek Harness MCP and Skill Manager Plugin",
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "exports": {
@@ -20,7 +21,8 @@
     "client.js.map",
     "index.mjs",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dsh": {
     "bundle": {
