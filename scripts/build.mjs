@@ -1,4 +1,4 @@
-import { copyFile, rm } from 'node:fs/promises'
+import { copyFile, rm, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
@@ -20,10 +20,22 @@ function run(command, args) {
 }
 
 const dist = join(pluginRoot, 'dist')
+const lib = join(pluginRoot, 'lib')
 await rm(dist, { recursive: true, force: true })
+await rm(lib, { recursive: true, force: true })
+await mkdir(lib, { recursive: true })
+
 await run(join(pluginRoot, 'node_modules/.bin/tsc'), ['-p', 'tsconfig.json'])
 await run(join(pluginRoot, 'node_modules/.bin/tsdown'), ['--config', 'tsdown.config.ts'])
+
+// Output to lib/ (matching dsh-codex-connect)
+await copyFile(join(dist, 'index.js'), join(lib, 'index.js'))
+await copyFile(join(dist, 'client.js'), join(lib, 'client.js'))
+await copyFile(join(dist, 'client.js.map'), join(lib, 'client.js.map'))
+
+// Also copy to root for legacy fallback
 await copyFile(join(dist, 'index.js'), join(pluginRoot, 'index.mjs'))
 await copyFile(join(dist, 'client.js'), join(pluginRoot, 'client.js'))
 await copyFile(join(dist, 'client.js.map'), join(pluginRoot, 'client.js.map'))
+
 await rm(dist, { recursive: true, force: true })

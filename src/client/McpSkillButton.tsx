@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from 'react'
 import { McpSkillModal } from './McpSkillModal.tsx'
-import styles from './McpSkillManager.module.css'
 
 export interface McpSkillButtonProps {
   rpc?: any
@@ -9,59 +8,100 @@ export interface McpSkillButtonProps {
 
 export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNode {
   const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
 
   return (
-    <>
+    <span
+      onMouseEnter={() => {
+        setHovered(true)
+        setTooltipVisible(true)
+      }}
+      onMouseLeave={() => {
+        setHovered(false)
+        setTooltipVisible(false)
+      }}
+      onFocus={() => setTooltipVisible(true)}
+      onBlur={() => setTooltipVisible(false)}
+      style={{
+        display: 'inline-flex',
+        position: 'relative',
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <button
         type="button"
-        className={`${styles.inputBtn} ${open ? styles.inputBtnActive : ''}`}
-        onClick={() => setOpen((prev) => !prev)}
         title="MCP & Skill 管理"
         aria-label="MCP & Skill 管理"
+        onClick={() => setOpen((prev) => !prev)}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 30,
+          height: 30,
+          padding: 0,
+          border: 0,
+          borderRadius: 8,
+          background: open
+            ? 'var(--dsw-alias-interactive-bg-hover-solid, rgba(255, 255, 255, 0.16))'
+            : hovered
+              ? 'var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.08))'
+              : 'transparent',
+          color: open
+            ? 'var(--dsw-alias-state-business-primary, #3b82f6)'
+            : hovered
+              ? 'var(--dsw-alias-label-primary, #ffffff)'
+              : 'var(--dsw-alias-label-secondary, #94a3b8)',
+          cursor: 'pointer',
+          transition: 'all 0.15s ease',
+        }}
       >
-        {/* Tool / Blocks SVG icon */}
+        {/* Modern 4-block / puzzle icon for MCP & Skills */}
         <svg
-          width="15"
-          height="15"
-          viewBox="0 0 16 16"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
         >
-          <rect
-            x="2"
-            y="2"
-            width="5"
-            height="5"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
-          <rect
-            x="9"
-            y="2"
-            width="5"
-            height="5"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
-          <rect
-            x="2"
-            y="9"
-            width="5"
-            height="5"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
-          <path
-            d="M9 11.5H14M11.5 9V14"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <path d="M14 17.5h7M17.5 14v7" />
         </svg>
       </button>
+
+      {tooltipVisible && !open && (
+        <span
+          role="tooltip"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: 'calc(100% + 8px)',
+            zIndex: 1000,
+            transform: 'translateX(-50%)',
+            padding: '4px 8px',
+            borderRadius: 6,
+            background: 'var(--dsw-specific-tip, #1f2329)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            color: 'var(--dsw-alias-label-primary, #fff)',
+            fontSize: 12,
+            lineHeight: '18px',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+          }}
+        >
+          MCP & Skill 管理
+        </span>
+      )}
 
       {open && (
         <McpSkillModal
@@ -70,6 +110,6 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
           onClose={() => setOpen(false)}
         />
       )}
-    </>
+    </span>
   )
 }

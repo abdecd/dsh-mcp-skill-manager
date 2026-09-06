@@ -1,29 +1,34 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type {} from '@deepseek-ai/dsh-client-ui-model-selection/client'
 import { McpSkillButton } from './McpSkillButton.tsx'
 
+export const name = 'dsh-mcp-skill-manager-client'
 export const inject = ['slots', 'connection']
 
 export function apply(ctx: Context): void {
-  const slots = (ctx as any).slots ?? ctx.get('slots')
-  if (!slots) return
-
-  slots.inject('conversation.input.right', () =>
-    slots.register(
-      {
-        name: 'conversation.input.right',
-        id: 'mcp-skill-manager-button',
-        order: 0,
-        inject: (sessionId: string) => {
-          const conn = (ctx as any).connection ?? ctx.get('connection')
-          return {
-            sessionId,
-            rpc: conn?.rpc,
-          }
+  ctx.inject(['slots', 'modelDirectories'], (scope: Context) => {
+    scope.slots.inject('conversation.input.right', () =>
+      scope.slots.register(
+        {
+          name: 'conversation.input.right',
+          id: 'mcp-skill-manager-button',
+          order: 0,
+          inject: (sessionId: string) => {
+            const conn =
+              (scope as any).connection ??
+              (ctx as any).connection ??
+              scope.get('connection') ??
+              ctx.get('connection')
+            return {
+              sessionId,
+              rpc: conn?.rpc,
+            }
+          },
         },
-      },
-      McpSkillButton,
-    ),
-  )
+        McpSkillButton,
+      ),
+    )
+  })
 }
