@@ -292,19 +292,15 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                         <span className={styles.itemName} title={skill.name}>
                           {skill.name}
                         </span>
+                        <span className={`${styles.itemBadge} ${styles.badgeSkill}`}>
+                          Skill
+                        </span>
                         <span
                           className={`${styles.itemBadge} ${
                             skill.scope === 'project' ? styles.badgeProject : styles.badgeGlobal
                           }`}
                         >
                           {skill.scope === 'project' ? '项目' : '全局'}
-                        </span>
-                        <span
-                          className={`${styles.itemBadge} ${
-                            skill.enabled ? styles.badgeActive : styles.badgeInactive
-                          }`}
-                        >
-                          {skill.enabled ? '已激活' : '已停用'}
                         </span>
                       </div>
                       {skill.description ? (
@@ -340,12 +336,8 @@ export function McpSkillPopover({ rpc, sessionId, onClose }: McpSkillPopoverProp
                         <span className={`${styles.itemBadge} ${styles.badgeMcp}`}>
                           MCP
                         </span>
-                        <span
-                          className={`${styles.itemBadge} ${
-                            mcp.enabled ? styles.badgeActive : styles.badgeInactive
-                          }`}
-                        >
-                          {mcp.enabled ? '已激活' : '已停用'}
+                        <span className={`${styles.itemBadge} ${styles.badgeGlobal}`}>
+                          全局
                         </span>
                       </div>
                       <div
