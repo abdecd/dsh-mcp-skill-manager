@@ -1,0 +1,4 @@
+.dsh/
+dist/
+node_modules/
+*.tsbuildinfo
