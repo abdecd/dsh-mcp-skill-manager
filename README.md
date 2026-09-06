@@ -22,21 +22,16 @@ DeepSeek Harness (DSH) Web 插件：在输入框右侧（模型选择器左侧�
 
 ## 📦 安装指南
 
-你可以通过以下任一方式将插件安装到 DeepSeek Harness：
+### 方式一：从 GitHub / npm 直接安装
 
-### 方式一：通过 DSH CLI 一键安装（推荐）
-
-如果你的 DSH 环境支持 `plugin` 命令，可以直接运行：
+如果无需修改源码，可以直接使用 DSH CLI 一键安装：
 
 ```bash
-# 1. 从 GitHub 仓库直接安装（请将 <your-username> 替换为你的 GitHub 用户名）
-dsh plugin --profile web add github:<your-username>/dsh-mcp-skill-manager
-
-# 或从 npm 安装（如果已发布至 npm）
-dsh plugin --profile web add dsh-mcp-skill-manager
+# 从 GitHub 仓库安装
+dsh plugin --profile web add github:abdecd/dsh-mcp-skill-manager
 ```
 
-安装完成后重启 DSH 服务即可：
+重启 DSH Web 即可生效：
 
 ```bash
 dsh web
@@ -44,54 +39,28 @@ dsh web
 
 ---
 
-### 方式二：从源码克隆与本地安装
+### 方式二：本地克隆与开发安装（推荐）
 
-适用于本地开发、自定义修改或手动配置环境：
-
-#### 1. 克隆本仓库并编译
+如果你克隆了本仓库，直接在项目根目录下即可通过 `dsh plugin` 一键链接安装：
 
 ```bash
+# 1. 克隆本仓库
 git clone https://github.com/<your-username>/dsh-mcp-skill-manager.git
 cd dsh-mcp-skill-manager
 
-# 安装依赖
+# 2. 安装依赖并编译构建
 pnpm install
-
-# 编译客户端产物与后端逻辑
 pnpm run build
+
+# 3. 链接安装至 DSH Web Profile（推荐使用 link:. 保持本地热更新）
+dsh plugin --profile web add link:.
 ```
 
-#### 2. 将插件引入 DSH
-
-在 DSH 的 Web profile 目录（通常为 `~/.dsh/profiles/web`）下安装该本地路径，或创建软链接：
-
-```bash
-cd ~/.dsh/profiles/web
-
-# 方式 A：通过 pnpm/npm 本地添加
-pnpm add /path/to/dsh-mcp-skill-manager
-
-# 方式 B：或者直接软链接到 node_modules
-ln -s /path/to/dsh-mcp-skill-manager ./node_modules/dsh-mcp-skill-manager
-```
-
-#### 3. 启用插件配置
-
-检查或编辑你的 `~/.dsh/cordis.patch.yml`（或 `~/.dsh/profiles/web/cordis.patch.yml`），在 `- insert:` 列表中添加：
-
-```yaml
-- insert:
-    - id: mcp-skill-manager
-      name: dsh-mcp-skill-manager
-```
-
-#### 4. 启动 DSH Web
+安装后启动或重启 DSH 服务即可：
 
 ```bash
 dsh web
 ```
-
-浏览器打开 Web 界面（通常为 `http://127.0.0.1:3080`），在输入框右侧即可看到「MCP & Skills」管理按钮。
 
 ---
 
