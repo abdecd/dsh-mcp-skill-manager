@@ -18,40 +18,40 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
-			"filterBar": "VlMPOq_filterBar",
-			"headerActions": "VlMPOq_headerActions",
-			"itemBadge": "VlMPOq_itemBadge",
-			"tabBtn": "VlMPOq_tabBtn",
-			"title": "VlMPOq_title",
-			"loadingSpinner": "VlMPOq_loadingSpinner",
-			"itemTitleRow": "VlMPOq_itemTitleRow",
-			"popoverFadeIn": "VlMPOq_popoverFadeIn",
-			"badgeMcp": "VlMPOq_badgeMcp",
-			"itemName": "VlMPOq_itemName",
-			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
-			"switchTrackChecked": "VlMPOq_switchTrackChecked",
-			"cardList": "VlMPOq_cardList",
-			"titleArea": "VlMPOq_titleArea",
-			"itemCard": "VlMPOq_itemCard",
-			"switchTrack": "VlMPOq_switchTrack",
-			"popoverMenu": "VlMPOq_popoverMenu",
-			"tabBtnActive": "VlMPOq_tabBtnActive",
-			"listContainer": "VlMPOq_listContainer",
-			"badgeGlobal": "VlMPOq_badgeGlobal",
-			"itemCardDisabled": "VlMPOq_itemCardDisabled",
-			"searchInput": "VlMPOq_searchInput",
 			"switchThumbChecked": "VlMPOq_switchThumbChecked",
-			"emptyState": "VlMPOq_emptyState",
+			"searchInput": "VlMPOq_searchInput",
+			"popoverFadeIn": "VlMPOq_popoverFadeIn",
+			"filterBar": "VlMPOq_filterBar",
+			"title": "VlMPOq_title",
+			"badgeMcp": "VlMPOq_badgeMcp",
+			"itemCard": "VlMPOq_itemCard",
+			"headerActions": "VlMPOq_headerActions",
 			"itemDesc": "VlMPOq_itemDesc",
-			"header": "VlMPOq_header",
-			"iconBtn": "VlMPOq_iconBtn",
-			"tabs": "VlMPOq_tabs",
-			"itemInfo": "VlMPOq_itemInfo",
-			"itemAction": "VlMPOq_itemAction",
-			"switchThumb": "VlMPOq_switchThumb",
+			"switchTrack": "VlMPOq_switchTrack",
 			"badgeSkill": "VlMPOq_badgeSkill",
+			"itemTitleRow": "VlMPOq_itemTitleRow",
+			"switchTrackChecked": "VlMPOq_switchTrackChecked",
+			"popoverMenu": "VlMPOq_popoverMenu",
+			"titleArea": "VlMPOq_titleArea",
+			"tabBtnActive": "VlMPOq_tabBtnActive",
+			"switchTrackDisabled": "VlMPOq_switchTrackDisabled",
+			"itemCardDisabled": "VlMPOq_itemCardDisabled",
+			"tabBtn": "VlMPOq_tabBtn",
+			"loadingSpinner": "VlMPOq_loadingSpinner",
+			"badgeGlobal": "VlMPOq_badgeGlobal",
+			"iconBtn": "VlMPOq_iconBtn",
+			"itemName": "VlMPOq_itemName",
+			"header": "VlMPOq_header",
+			"tabs": "VlMPOq_tabs",
+			"badgeProject": "VlMPOq_badgeProject",
+			"itemBadge": "VlMPOq_itemBadge",
+			"switchThumb": "VlMPOq_switchThumb",
 			"spin": "VlMPOq_spin",
-			"badgeProject": "VlMPOq_badgeProject"
+			"itemAction": "VlMPOq_itemAction",
+			"listContainer": "VlMPOq_listContainer",
+			"cardList": "VlMPOq_cardList",
+			"itemInfo": "VlMPOq_itemInfo",
+			"emptyState": "VlMPOq_emptyState"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -140,30 +140,33 @@ window.__ModuleLoader__.load({
 					const anchor = anchorRef?.current?.getBoundingClientRect();
 					const menu = menuRef.current;
 					if (!anchor || !menu) return;
-					const viewport = window.visualViewport;
-					const viewportLeft = viewport?.offsetLeft ?? 0;
-					const viewportTop = viewport?.offsetTop ?? 0;
-					const viewportWidth = viewport?.width ?? window.innerWidth;
-					const viewportHeight = viewport?.height ?? window.innerHeight;
-					const viewportRight = viewportLeft + viewportWidth;
-					const viewportBottom = viewportTop + viewportHeight;
-					const menuWidth = menu.offsetWidth;
-					const menuHeight = menu.offsetHeight;
+					const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+					const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+					const menuWidth = menu.offsetWidth || 340;
 					const computedMinHeight = Number.parseFloat(window.getComputedStyle(menu).minHeight) || 0;
-					const minLeft = viewportLeft + VIEWPORT_MARGIN;
-					const maxLeft = Math.max(minLeft, viewportRight - menuWidth - VIEWPORT_MARGIN);
+					const minLeft = VIEWPORT_MARGIN;
+					const maxLeft = Math.max(minLeft, viewportWidth - menuWidth - VIEWPORT_MARGIN);
 					const left = clamp(anchor.right - menuWidth, minLeft, maxLeft);
-					const spaceAbove = Math.max(0, anchor.top - viewportTop - POPOVER_GAP - VIEWPORT_MARGIN);
-					const spaceBelow = Math.max(0, viewportBottom - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN);
+					const spaceAbove = Math.max(0, anchor.top - POPOVER_GAP - VIEWPORT_MARGIN);
+					const spaceBelow = Math.max(0, viewportHeight - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN);
 					const openAbove = spaceAbove >= spaceBelow;
-					const maxHeight = Math.max(1, Math.min(menuHeight, openAbove ? spaceAbove : spaceBelow));
-					const minHeight = Math.min(computedMinHeight, maxHeight);
-					const top = clamp(openAbove ? anchor.top - POPOVER_GAP - maxHeight : anchor.bottom + POPOVER_GAP, viewportTop + VIEWPORT_MARGIN, Math.max(viewportTop + VIEWPORT_MARGIN, viewportBottom - VIEWPORT_MARGIN - maxHeight));
+					const maxHeight = Math.max(100, Math.min(460, openAbove ? spaceAbove : spaceBelow));
+					const minHeight = Math.min(computedMinHeight || 280, maxHeight);
+					let top = "auto";
+					let bottom = "auto";
+					if (openAbove) {
+						bottom = Math.max(VIEWPORT_MARGIN, viewportHeight - anchor.top + POPOVER_GAP);
+						top = "auto";
+					} else {
+						top = Math.max(VIEWPORT_MARGIN, anchor.bottom + POPOVER_GAP);
+						bottom = "auto";
+					}
 					setPortalPosition((previous) => {
-						if (previous && previous.left === left && previous.top === top && previous.maxHeight === maxHeight && previous.minHeight === minHeight) return previous;
+						if (previous && previous.left === left && previous.top === top && previous.bottom === bottom && previous.maxHeight === maxHeight && previous.minHeight === minHeight) return previous;
 						return {
 							left,
 							top,
+							bottom,
 							maxHeight,
 							minHeight
 						};
@@ -320,10 +323,10 @@ window.__ModuleLoader__.load({
 			]);
 			const menuStyle = portal ? {
 				position: "fixed",
-				left: portalPosition?.left ?? 0,
-				top: portalPosition?.top ?? 0,
+				left: portalPosition ? `${portalPosition.left}px` : 0,
+				top: portalPosition?.top !== void 0 && portalPosition.top !== "auto" ? `${portalPosition.top}px` : "auto",
+				bottom: portalPosition?.bottom !== void 0 && portalPosition.bottom !== "auto" ? `${portalPosition.bottom}px` : "auto",
 				right: "auto",
-				bottom: "auto",
 				minHeight: portalPosition ? `${portalPosition.minHeight}px` : void 0,
 				maxHeight: portalPosition ? `${portalPosition.maxHeight}px` : void 0,
 				visibility: portalPosition ? "visible" : "hidden"

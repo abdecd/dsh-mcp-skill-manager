@@ -31,7 +31,8 @@ type ListItem =
 
 type PopoverPosition = {
   left: number
-  top: number
+  top?: number | 'auto' | undefined
+  bottom?: number | 'auto' | undefined
   maxHeight: number
   minHeight: number
 }
@@ -99,56 +100,55 @@ export function McpSkillPopover({
       const menu = menuRef.current
       if (!anchor || !menu) return
 
-      const viewport = window.visualViewport
-      const viewportLeft = viewport?.offsetLeft ?? 0
-      const viewportTop = viewport?.offsetTop ?? 0
-      const viewportWidth = viewport?.width ?? window.innerWidth
-      const viewportHeight = viewport?.height ?? window.innerHeight
-      const viewportRight = viewportLeft + viewportWidth
-      const viewportBottom = viewportTop + viewportHeight
-      const menuWidth = menu.offsetWidth
-      const menuHeight = menu.offsetHeight
+      // Use the viewport dimensions consistent with getBoundingClientRect() and position: fixed
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+      const menuWidth = menu.offsetWidth || 340
       const computedMinHeight = Number.parseFloat(window.getComputedStyle(menu).minHeight) || 0
 
-      const minLeft = viewportLeft + VIEWPORT_MARGIN
-      const maxLeft = Math.max(minLeft, viewportRight - menuWidth - VIEWPORT_MARGIN)
+      const minLeft = VIEWPORT_MARGIN
+      const maxLeft = Math.max(minLeft, viewportWidth - menuWidth - VIEWPORT_MARGIN)
       const left = clamp(anchor.right - menuWidth, minLeft, maxLeft)
 
       const spaceAbove = Math.max(
         0,
-        anchor.top - viewportTop - POPOVER_GAP - VIEWPORT_MARGIN,
+        anchor.top - POPOVER_GAP - VIEWPORT_MARGIN,
       )
       const spaceBelow = Math.max(
         0,
-        viewportBottom - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN,
+        viewportHeight - anchor.bottom - POPOVER_GAP - VIEWPORT_MARGIN,
       )
       const openAbove = spaceAbove >= spaceBelow
       const availableSpace = openAbove ? spaceAbove : spaceBelow
-      const maxHeight = Math.max(1, Math.min(menuHeight, availableSpace))
-      const minHeight = Math.min(computedMinHeight, maxHeight)
-      const preferredTop = openAbove
-        ? anchor.top - POPOVER_GAP - maxHeight
-        : anchor.bottom + POPOVER_GAP
-      const top = clamp(
-        preferredTop,
-        viewportTop + VIEWPORT_MARGIN,
-        Math.max(
-          viewportTop + VIEWPORT_MARGIN,
-          viewportBottom - VIEWPORT_MARGIN - maxHeight,
-        ),
-      )
+      const maxHeight = Math.max(100, Math.min(460, availableSpace))
+      const minHeight = Math.min(computedMinHeight || 280, maxHeight)
+
+      let top: number | 'auto' = 'auto'
+      let bottom: number | 'auto' = 'auto'
+
+      if (openAbove) {
+        // Anchor bottom right above the button, ensuring it stays directly above the trigger
+        // regardless of content height and never floats in mid-air.
+        bottom = Math.max(VIEWPORT_MARGIN, viewportHeight - anchor.top + POPOVER_GAP)
+        top = 'auto'
+      } else {
+        // Anchor top right below the button
+        top = Math.max(VIEWPORT_MARGIN, anchor.bottom + POPOVER_GAP)
+        bottom = 'auto'
+      }
 
       setPortalPosition((previous) => {
         if (
           previous &&
           previous.left === left &&
           previous.top === top &&
+          previous.bottom === bottom &&
           previous.maxHeight === maxHeight &&
           previous.minHeight === minHeight
         ) {
           return previous
         }
-        return { left, top, maxHeight, minHeight }
+        return { left, top, bottom, maxHeight, minHeight }
       })
     }
 
@@ -344,10 +344,16 @@ export function McpSkillPopover({
   const menuStyle: CSSProperties | undefined = portal
     ? {
         position: 'fixed',
-        left: portalPosition?.left ?? 0,
-        top: portalPosition?.top ?? 0,
+        left: portalPosition ? `${portalPosition.left}px` : 0,
+        top:
+          portalPosition?.top !== undefined && portalPosition.top !== 'auto'
+            ? `${portalPosition.top}px`
+            : 'auto',
+        bottom:
+          portalPosition?.bottom !== undefined && portalPosition.bottom !== 'auto'
+            ? `${portalPosition.bottom}px`
+            : 'auto',
         right: 'auto',
-        bottom: 'auto',
         minHeight: portalPosition ? `${portalPosition.minHeight}px` : undefined,
         maxHeight: portalPosition ? `${portalPosition.maxHeight}px` : undefined,
         visibility: portalPosition ? 'visible' : 'hidden',
