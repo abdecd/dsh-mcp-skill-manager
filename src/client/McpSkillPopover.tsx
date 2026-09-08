@@ -311,7 +311,8 @@ export function McpSkillPopover({
   const globalSkillCount = data ? data.globalSkills.length : 0
   const globalMcpCount = data ? data.globalMcps.length : 0
 
-  // Combine into a single list: project level first, then global level
+  // Combine into a single list: enabled items first, disabled items last,
+  // preserving original order within each group (stable partition).
   const visibleItems = useMemo(() => {
     const list: ListItem[] = []
     if (activeTab === 'all' || activeTab === 'project') {
@@ -327,7 +328,17 @@ export function McpSkillPopover({
         list.push({ type: 'skill', item: skill })
       }
     }
-    return list
+
+    const enabled: ListItem[] = []
+    const disabled: ListItem[] = []
+    for (const entry of list) {
+      if (entry.item.enabled) {
+        enabled.push(entry)
+      } else {
+        disabled.push(entry)
+      }
+    }
+    return [...enabled, ...disabled]
   }, [activeTab, filteredProjectSkills, filteredGlobalMcps, filteredGlobalSkills])
 
   const menuStyle: CSSProperties | undefined = portal

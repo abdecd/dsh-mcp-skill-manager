@@ -6662,6 +6662,16 @@ var import_dist = (/* @__PURE__ */ __commonJSMin(((exports) => {
 * Shared types and RPC contract for dsh-mcp-skill-manager.
 */
 const RPC_CHANNEL = "/mcp-skill-manager";
+/**
+* Sort items so that enabled items appear first, while preserving relative order (stable sort).
+*/
+function sortByEnabled(items) {
+	const enabled = [];
+	const disabled = [];
+	for (const item of items) if (item.enabled) enabled.push(item);
+	else disabled.push(item);
+	return [...enabled, ...disabled];
+}
 //#endregion
 //#region src/index.ts
 const name = "mcp-skill-manager";
@@ -6930,15 +6940,15 @@ function apply(ctx) {
 				const projectDshParent = path.join(projectRoot, ".dsh");
 				const projectAgentsParent = path.join(projectRoot, ".agents");
 				const [projectDshSkills, projectAgentsSkills] = await Promise.all([globalSkillParents.has(skillParentKey(projectDshParent)) ? Promise.resolve([]) : collectSkillsForParent(projectDshParent, "project", "project-dsh"), globalSkillParents.has(skillParentKey(projectAgentsParent)) ? Promise.resolve([]) : collectSkillsForParent(projectAgentsParent, "project", "project-agents")]);
-				const projectSkills = [...projectDshSkills, ...projectAgentsSkills];
+				const projectSkills = sortByEnabled([...projectDshSkills, ...projectAgentsSkills]);
 				const [globalDshSkills, globalAgentsSkills] = await Promise.all([collectSkillsForParent(dshHome, "global", "user-dsh"), collectSkillsForParent(agentsHome, "global", "user-agents")]);
 				return {
 					ok: true,
 					value: {
 						projectRoot,
 						projectSkills,
-						globalSkills: [...globalDshSkills, ...globalAgentsSkills],
-						globalMcps: await readGlobalMcps(cordisPatchPath)
+						globalSkills: sortByEnabled([...globalDshSkills, ...globalAgentsSkills]),
+						globalMcps: sortByEnabled(await readGlobalMcps(cordisPatchPath))
 					}
 				};
 			}
@@ -6989,4 +6999,4 @@ function apply(ctx) {
 	}, { authority: "loopback" });
 }
 //#endregion
-export { apply, inject, name };
+export { apply, inject, name, sortByEnabled };

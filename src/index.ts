@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process'
 import { parseDocument, parse as parseYaml, isSeq, isMap } from 'yaml'
 import {
   RPC_CHANNEL,
+  sortByEnabled,
   type ManagerData,
   type McpItem,
   type RpcResult,
@@ -16,6 +17,7 @@ import {
   type ToggleSkillPayload,
 } from './shared.ts'
 
+export { sortByEnabled } from './shared.ts'
 export const name = 'mcp-skill-manager'
 export const inject = ['connection']
 
@@ -363,17 +365,17 @@ export function apply(ctx: Context): void {
                 ? Promise.resolve([] as SkillItem[])
                 : collectSkillsForParent(projectAgentsParent, 'project', 'project-agents'),
             ])
-            const projectSkills = [...projectDshSkills, ...projectAgentsSkills]
+            const projectSkills = sortByEnabled([...projectDshSkills, ...projectAgentsSkills])
 
             // 2. Global-level skills
             const [globalDshSkills, globalAgentsSkills] = await Promise.all([
               collectSkillsForParent(dshHome, 'global', 'user-dsh'),
               collectSkillsForParent(agentsHome, 'global', 'user-agents'),
             ])
-            const globalSkills = [...globalDshSkills, ...globalAgentsSkills]
+            const globalSkills = sortByEnabled([...globalDshSkills, ...globalAgentsSkills])
 
             // 3. Global MCPs
-            const globalMcps = await readGlobalMcps(cordisPatchPath)
+            const globalMcps = sortByEnabled(await readGlobalMcps(cordisPatchPath))
 
             const data: ManagerData = {
               projectRoot,

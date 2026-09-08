@@ -62,3 +62,20 @@ export interface OpenFolderPayload {
 export type RpcResult<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } }
+
+/**
+ * Sort items so that enabled items appear first, while preserving relative order (stable sort).
+ */
+export function sortByEnabled<T extends { enabled: boolean }>(items: T[]): T[] {
+  const enabled: T[] = []
+  const disabled: T[] = []
+  for (const item of items) {
+    if (item.enabled) {
+      enabled.push(item)
+    } else {
+      disabled.push(item)
+    }
+  }
+  return [...enabled, ...disabled]
+}
+
