@@ -6,7 +6,7 @@
   width: 340px;
   max-width: min(380px, 92vw);
   max-height: min(460px, 72vh);
-  background: var(--dsw-specific-menu, #1e1e24);
+  background: var(--dsw-alias-bg-layer-2, #2c2c2e);
   color: var(--dsw-alias-label-primary, #e2e8f0);
   border: 1px solid var(--dsw-alias-border-l1, rgba(255, 255, 255, 0.12));
   border-radius: 14px;
@@ -50,7 +50,7 @@
   justify-content: space-between;
   padding: 8px 12px 6px;
   border-bottom: 1px solid var(--dsw-alias-border-l2, rgba(255, 255, 255, 0.08));
-  background: var(--dsw-alias-bg-secondary, rgba(255, 255, 255, 0.02));
+  background: transparent;
   flex: none;
 }
 
@@ -106,7 +106,7 @@
 .searchInput {
   width: 100%;
   box-sizing: border-box;
-  background: var(--dsw-alias-bg-tertiary, rgba(255, 255, 255, 0.05));
+  background: var(--dsw-alias-bg-module-platform, var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.05)));
   border: 1px solid var(--dsw-alias-border-l2, rgba(255, 255, 255, 0.1));
   border-radius: 6px;
   padding: 4px 8px;
@@ -126,7 +126,7 @@
 
 .tabs {
   display: flex;
-  background: var(--dsw-alias-bg-tertiary, rgba(255, 255, 255, 0.05));
+  background: var(--dsw-alias-bg-module-platform, var(--dsw-alias-interactive-bg-hover, rgba(255, 255, 255, 0.05)));
   padding: 2px;
   border-radius: 5px;
   gap: 2px;
@@ -171,12 +171,12 @@
 }
 
 .listContainer::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--dsw-alias-scrollbar-bg-l2, rgba(255, 255, 255, 0.15));
   border-radius: 999px;
 }
 
 .listContainer::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--dsw-alias-scrollbar-hover-l2, rgba(255, 255, 255, 0.25));
 }
 
 .cardList {
