@@ -246,6 +246,8 @@ export function McpSkillPopover({
         id: mcp.id,
         serverName: mcp.serverName,
         enabled: nextState,
+        scope: mcp.scope,
+        configPath: mcp.configPath,
       })
 
       if (res && res.ok) {
@@ -307,9 +309,11 @@ export function McpSkillPopover({
     )
   }, [data, query])
 
-  const projectCount = data ? data.projectSkills.length : 0
-  const globalSkillCount = data ? data.globalSkills.length : 0
-  const globalMcpCount = data ? data.globalMcps.length : 0
+  const profileMcpCount = data ? data.globalMcps.filter((m) => m.scope === 'profile').length : 0
+  const globalMcpOnlyCount = data ? data.globalMcps.filter((m) => m.scope === 'global').length : 0
+  const projectCount = (data ? data.projectSkills.length : 0) + profileMcpCount
+  const globalCount = (data ? data.globalSkills.length : 0) + globalMcpOnlyCount
+  const totalCount = projectCount + globalCount
 
   // Combine into a single list: enabled items first, disabled items last,
   // preserving original order within each group (stable partition).
@@ -319,10 +323,17 @@ export function McpSkillPopover({
       for (const skill of filteredProjectSkills) {
         list.push({ type: 'skill', item: skill })
       }
+      for (const mcp of filteredGlobalMcps) {
+        if (mcp.scope === 'profile') {
+          list.push({ type: 'mcp', item: mcp })
+        }
+      }
     }
     if (activeTab === 'all' || activeTab === 'global') {
       for (const mcp of filteredGlobalMcps) {
-        list.push({ type: 'mcp', item: mcp })
+        if (mcp.scope === 'global') {
+          list.push({ type: 'mcp', item: mcp })
+        }
       }
       for (const skill of filteredGlobalSkills) {
         list.push({ type: 'skill', item: skill })
@@ -426,7 +437,7 @@ export function McpSkillPopover({
             className={`${styles.tabBtn} ${activeTab === 'all' ? styles.tabBtnActive : ''}`}
             onClick={() => setActiveTab('all')}
           >
-            全部 ({projectCount + globalSkillCount + globalMcpCount})
+            全部 ({totalCount})
           </button>
           <button
             type="button"
@@ -440,7 +451,7 @@ export function McpSkillPopover({
             className={`${styles.tabBtn} ${activeTab === 'global' ? styles.tabBtnActive : ''}`}
             onClick={() => setActiveTab('global')}
           >
-            全局 ({globalSkillCount + globalMcpCount})
+            全局 ({globalCount})
           </button>
         </div>
       </div>
@@ -521,8 +532,12 @@ export function McpSkillPopover({
                         <span className={`${styles.itemBadge} ${styles.badgeMcp}`}>
                           MCP
                         </span>
-                        <span className={`${styles.itemBadge} ${styles.badgeGlobal}`}>
-                          全局
+                        <span
+                          className={`${styles.itemBadge} ${
+                            mcp.scope === 'profile' ? styles.badgeProject : styles.badgeGlobal
+                          }`}
+                        >
+                          {mcp.scope === 'profile' ? 'Profile' : '全局'}
                         </span>
                       </div>
                       <div

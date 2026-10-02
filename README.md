@@ -81,8 +81,21 @@ dsh web
 
 ### 2. MCP 配置规则
 
-- 全局 MCP 读取自 `~/.dsh/cordis.patch.yml`。
-- 启用时移除 MCP 配置项中的 `disabled: true` 字段；停用时自动写入 `disabled: true`。
+- **活跃 Profile MCP**：自动感知宿主 `profileContext`，优先读取并修改活跃 Profile 的 `cordis.patch.yml`（如 `~/.dsh/profiles/web/cordis.patch.yml`）。
+- **全局 MCP**：读取并修改全局 `~/.dsh/cordis.patch.yml`。
+- 启用时移除 MCP 配置项中的 `disabled: true` 字段；停用时使用 AST 精确写入 `disabled: true`，严格保留未知字段与注释。
+- 服务端派生严格的白名单路径保护，严禁任意路径写入。
+
+---
+
+## 🔍 兼容性与静态验证说明
+
+- **宿主适配目标**：DeepSeek Harness `0.2.0-rc.2`（依赖 Cohort `0.2.0-rc.2`，Peer `^0.2.0-rc.2`）
+- **静态验证状态**：
+  - `pnpm run build`：通过（Rollup/tsdown 打包成功，纯净性检查通过）
+  - `pnpm run typecheck`：通过（0 错误）
+  - `pnpm run test`：通过（11/11 单元与隔离回归测试全部通过）
+- **运行时说明**：静态契约与隔离回归已全数验证，真实 DSH 0.2.0-rc.2 宿主环境端到端交互待运行时实际验证。
 
 ---
 

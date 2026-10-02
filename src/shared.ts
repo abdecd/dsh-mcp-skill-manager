@@ -21,6 +21,8 @@ export interface SkillItem {
   whenToUse?: string | undefined
 }
 
+export type McpScope = 'profile' | 'global'
+
 export interface McpItem {
   id: string
   serverName: string
@@ -30,7 +32,7 @@ export interface McpItem {
   args?: string[] | undefined
   url?: string | undefined
   enabled: boolean
-  scope: 'global'
+  scope: McpScope
   configPath?: string | undefined
 }
 
@@ -53,6 +55,8 @@ export interface ToggleMcpPayload {
   id: string
   serverName?: string | undefined
   enabled: boolean
+  scope?: McpScope | undefined
+  configPath?: string | undefined
 }
 
 export interface OpenFolderPayload {

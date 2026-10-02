@@ -18,40 +18,40 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var McpSkillManager_module_css_default = {
+			"popoverFadeIn": "_3hZ0nq_popoverFadeIn",
+			"itemTitleRow": "_3hZ0nq_itemTitleRow",
 			"badgeMcp": "_3hZ0nq_badgeMcp",
-			"badgeProject": "_3hZ0nq_badgeProject",
-			"switchThumbChecked": "_3hZ0nq_switchThumbChecked",
-			"badgeSkill": "_3hZ0nq_badgeSkill",
-			"listContainer": "_3hZ0nq_listContainer",
-			"title": "_3hZ0nq_title",
-			"itemDesc": "_3hZ0nq_itemDesc",
-			"itemBadge": "_3hZ0nq_itemBadge",
 			"itemCardDisabled": "_3hZ0nq_itemCardDisabled",
+			"popoverMenu": "_3hZ0nq_popoverMenu",
+			"badgeGlobal": "_3hZ0nq_badgeGlobal",
+			"cardList": "_3hZ0nq_cardList",
+			"itemDesc": "_3hZ0nq_itemDesc",
+			"badgeSkill": "_3hZ0nq_badgeSkill",
+			"loadingSpinner": "_3hZ0nq_loadingSpinner",
+			"iconBtn": "_3hZ0nq_iconBtn",
+			"switchTrackChecked": "_3hZ0nq_switchTrackChecked",
+			"titleArea": "_3hZ0nq_titleArea",
+			"tabs": "_3hZ0nq_tabs",
+			"listContainer": "_3hZ0nq_listContainer",
+			"spin": "_3hZ0nq_spin",
+			"title": "_3hZ0nq_title",
 			"header": "_3hZ0nq_header",
+			"itemCard": "_3hZ0nq_itemCard",
+			"searchInput": "_3hZ0nq_searchInput",
+			"itemInfo": "_3hZ0nq_itemInfo",
+			"filterBar": "_3hZ0nq_filterBar",
+			"itemBadge": "_3hZ0nq_itemBadge",
+			"badgeProject": "_3hZ0nq_badgeProject",
+			"itemAction": "_3hZ0nq_itemAction",
 			"switchTrackDisabled": "_3hZ0nq_switchTrackDisabled",
 			"headerActions": "_3hZ0nq_headerActions",
-			"popoverMenu": "_3hZ0nq_popoverMenu",
-			"tabBtn": "_3hZ0nq_tabBtn",
-			"switchThumb": "_3hZ0nq_switchThumb",
-			"badgeGlobal": "_3hZ0nq_badgeGlobal",
-			"searchInput": "_3hZ0nq_searchInput",
-			"tabs": "_3hZ0nq_tabs",
-			"iconBtn": "_3hZ0nq_iconBtn",
-			"itemTitleRow": "_3hZ0nq_itemTitleRow",
-			"switchTrackChecked": "_3hZ0nq_switchTrackChecked",
-			"loadingSpinner": "_3hZ0nq_loadingSpinner",
-			"filterBar": "_3hZ0nq_filterBar",
+			"switchThumbChecked": "_3hZ0nq_switchThumbChecked",
 			"tabBtnActive": "_3hZ0nq_tabBtnActive",
-			"cardList": "_3hZ0nq_cardList",
-			"itemCard": "_3hZ0nq_itemCard",
-			"titleArea": "_3hZ0nq_titleArea",
-			"popoverFadeIn": "_3hZ0nq_popoverFadeIn",
-			"itemAction": "_3hZ0nq_itemAction",
+			"emptyState": "_3hZ0nq_emptyState",
 			"switchTrack": "_3hZ0nq_switchTrack",
+			"switchThumb": "_3hZ0nq_switchThumb",
 			"itemName": "_3hZ0nq_itemName",
-			"itemInfo": "_3hZ0nq_itemInfo",
-			"spin": "_3hZ0nq_spin",
-			"emptyState": "_3hZ0nq_emptyState"
+			"tabBtn": "_3hZ0nq_tabBtn"
 		};
 		//#endregion
 		//#region src/client/Switch.tsx
@@ -255,7 +255,9 @@ window.__ModuleLoader__.load({
 					const res = await rpc.call("/mcp-skill-manager", "toggle-mcp", {
 						id: mcp.id,
 						serverName: mcp.serverName,
-						enabled: nextState
+						enabled: nextState,
+						scope: mcp.scope,
+						configPath: mcp.configPath
 					});
 					if (res && res.ok) setData((prev) => {
 						if (!prev) return prev;
@@ -291,17 +293,25 @@ window.__ModuleLoader__.load({
 				if (!data) return [];
 				return data.globalMcps.filter((it) => !query || it.serverName.toLowerCase().includes(query) || it.id.toLowerCase().includes(query) || it.command && it.command.toLowerCase().includes(query));
 			}, [data, query]);
-			const projectCount = data ? data.projectSkills.length : 0;
-			const globalSkillCount = data ? data.globalSkills.length : 0;
-			const globalMcpCount = data ? data.globalMcps.length : 0;
+			const profileMcpCount = data ? data.globalMcps.filter((m) => m.scope === "profile").length : 0;
+			const globalMcpOnlyCount = data ? data.globalMcps.filter((m) => m.scope === "global").length : 0;
+			const projectCount = (data ? data.projectSkills.length : 0) + profileMcpCount;
+			const globalCount = (data ? data.globalSkills.length : 0) + globalMcpOnlyCount;
+			const totalCount = projectCount + globalCount;
 			const visibleItems = (0, react.useMemo)(() => {
 				const list = [];
-				if (activeTab === "all" || activeTab === "project") for (const skill of filteredProjectSkills) list.push({
-					type: "skill",
-					item: skill
-				});
+				if (activeTab === "all" || activeTab === "project") {
+					for (const skill of filteredProjectSkills) list.push({
+						type: "skill",
+						item: skill
+					});
+					for (const mcp of filteredGlobalMcps) if (mcp.scope === "profile") list.push({
+						type: "mcp",
+						item: mcp
+					});
+				}
 				if (activeTab === "all" || activeTab === "global") {
-					for (const mcp of filteredGlobalMcps) list.push({
+					for (const mcp of filteredGlobalMcps) if (mcp.scope === "global") list.push({
 						type: "mcp",
 						item: mcp
 					});
@@ -406,7 +416,7 @@ window.__ModuleLoader__.load({
 									onClick: () => setActiveTab("all"),
 									children: [
 										"全部 (",
-										projectCount + globalSkillCount + globalMcpCount,
+										totalCount,
 										")"
 									]
 								}),
@@ -426,7 +436,7 @@ window.__ModuleLoader__.load({
 									onClick: () => setActiveTab("global"),
 									children: [
 										"全局 (",
-										globalSkillCount + globalMcpCount,
+										globalCount,
 										")"
 									]
 								})
@@ -513,8 +523,8 @@ window.__ModuleLoader__.load({
 														children: "MCP"
 													}),
 													/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-														className: `${McpSkillManager_module_css_default.itemBadge} ${McpSkillManager_module_css_default.badgeGlobal}`,
-														children: "全局"
+														className: `${McpSkillManager_module_css_default.itemBadge} ${mcp.scope === "profile" ? McpSkillManager_module_css_default.badgeProject : McpSkillManager_module_css_default.badgeGlobal}`,
+														children: mcp.scope === "profile" ? "Profile" : "全局"
 													})
 												]
 											}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {

@@ -9,6 +9,7 @@ import {
   sortByEnabled,
   type ManagerData,
   type McpItem,
+  type McpScope,
   type RpcResult,
   type SkillItem,
   type SkillScope,
@@ -170,8 +171,33 @@ function skillParentKey(parentDir: string): string {
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved
 }
 
-/** Read global MCP definitions from ~/.dsh/cordis.patch.yml */
-async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
+export interface AllowedPatchPaths {
+  profilePatchPath?: string | undefined
+  globalPatchPath: string
+}
+
+/** Determine server-derived allowed patch paths from ProfileContext and environment. */
+export function getAllowedPatchPaths(ctx: Context, dshHome: string): AllowedPatchPaths {
+  const profileContext = (ctx.get('profileContext') || (ctx as any).profileContext) as {
+    patchPath?: string
+    home?: string
+    dir?: string
+    name?: string
+  } | undefined
+
+  const globalPatchPath = path.resolve(path.join(profileContext?.home || dshHome, 'cordis.patch.yml'))
+  const rawProfilePatchPath = profileContext?.patchPath ? path.resolve(profileContext.patchPath) : undefined
+  const profilePatchPath =
+    rawProfilePatchPath && rawProfilePatchPath !== globalPatchPath ? rawProfilePatchPath : undefined
+
+  return { profilePatchPath, globalPatchPath }
+}
+
+/** Read MCP definitions from a cordis.patch.yml file */
+async function readMcpsFromFile(
+  cordisPatchPath: string,
+  scope: McpScope,
+): Promise<McpItem[]> {
   const mcps: McpItem[] = []
   try {
     const content = await fs.promises.readFile(cordisPatchPath, 'utf8')
@@ -184,16 +210,16 @@ async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
           if (isSeq(insertSeq)) {
             for (const pluginItem of insertSeq.items) {
               if (isMap(pluginItem)) {
-                const id = String(pluginItem.get('id') ?? '')
+                const rawId = String(pluginItem.get('id') ?? '')
                 const name = String(pluginItem.get('name') ?? '')
                 const config = pluginItem.get('config')
                 const isMcp =
                   name === '@deepseek-ai/dsh-mcp-client' ||
-                  id.startsWith('mcp-') ||
+                  rawId.startsWith('mcp-') ||
                   (isMap(config) && config.has('serverName'))
 
                 if (isMcp) {
-                  const serverName = (isMap(config) && String(config.get('serverName') ?? '')) || id
+                  const serverName = (isMap(config) && String(config.get('serverName') ?? '')) || rawId
                   const transport = (isMap(config) && String(config.get('transport') ?? '')) || 'stdio'
                   const command = (isMap(config) && config.has('command') ? String(config.get('command')) : undefined)
                   const url = (isMap(config) && config.has('url') ? String(config.get('url')) : undefined)
@@ -207,7 +233,7 @@ async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
                   const rawDisabled = (pluginItem as any).get('disabled')
                   const disabled = rawDisabled === true || rawDisabled === 'true'
                   mcps.push({
-                    id,
+                    id: `${scope}:${rawId || serverName}`,
                     serverName,
                     name,
                     transport,
@@ -215,7 +241,7 @@ async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
                     url,
                     args,
                     enabled: !disabled,
-                    scope: 'global',
+                    scope,
                     configPath: cordisPatchPath,
                   })
                 }
@@ -225,53 +251,108 @@ async function readGlobalMcps(cordisPatchPath: string): Promise<McpItem[]> {
         }
       }
     }
-  } catch (err) {
-    console.warn('[dsh-mcp-skill-manager] Failed to read cordis.patch.yml:', err)
+  } catch (err: any) {
+    if (err?.code !== 'ENOENT') {
+      console.warn(`[dsh-mcp-skill-manager] Failed to read ${cordisPatchPath}:`, err)
+    }
   }
   return mcps
 }
 
-/** Toggle an MCP's disabled property in cordis.patch.yml */
-async function toggleMcp(cordisPatchPath: string, payload: ToggleMcpPayload): Promise<boolean> {
-  const content = await fs.promises.readFile(cordisPatchPath, 'utf8')
-  const doc = parseDocument(content)
-  const contents = doc.contents
-  let modified = false
+/** Toggle an MCP's disabled property in allowed cordis.patch.yml files */
+async function toggleMcp(
+  allowedPaths: AllowedPatchPaths,
+  payload: ToggleMcpPayload,
+): Promise<boolean> {
+  const { profilePatchPath, globalPatchPath } = allowedPaths
 
-  if (isSeq(contents)) {
-    for (const item of contents.items) {
-      if (isMap(item)) {
-        const insertSeq = item.get('insert')
-        if (isSeq(insertSeq)) {
-          for (const pluginItem of insertSeq.items) {
-            if (isMap(pluginItem)) {
-              const id = String(pluginItem.get('id') ?? '')
-              const config = pluginItem.get('config')
-              const serverName = isMap(config) ? String(config.get('serverName') ?? '') : ''
-              if (id === payload.id || (payload.serverName && serverName === payload.serverName)) {
-                if (payload.enabled) {
-                  // Activate: remove disabled property
-                  (pluginItem as any).delete('disabled')
-                } else {
-                  // Deactivate: add disabled: true
-                  (pluginItem as any).set('disabled', true)
+  // Strictly validate target path against server-derived allowlist
+  let targetPath: string | undefined
+  if (payload.configPath) {
+    const resolvedPayloadPath = path.resolve(payload.configPath)
+    if (
+      resolvedPayloadPath !== globalPatchPath &&
+      resolvedPayloadPath !== profilePatchPath
+    ) {
+      throw new Error(`Forbidden: target config path is not an allowed profile or global patch file: ${payload.configPath}`)
+    }
+    // Verify consistency between scope and configPath to prevent functional mismatch
+    if (payload.scope === 'profile' && (!profilePatchPath || resolvedPayloadPath !== profilePatchPath)) {
+      throw new Error(`Invalid request: scope "profile" does not match configPath: ${payload.configPath}`)
+    }
+    if (payload.scope === 'global' && resolvedPayloadPath !== globalPatchPath) {
+      throw new Error(`Invalid request: scope "global" does not match configPath: ${payload.configPath}`)
+    }
+    targetPath = resolvedPayloadPath
+  } else if (payload.scope === 'profile') {
+    if (!profilePatchPath) {
+      throw new Error('Profile patch path is not available in current profileContext')
+    }
+    targetPath = profilePatchPath
+  } else if (payload.scope === 'global') {
+    targetPath = globalPatchPath
+  }
+
+  // If targetPath is not yet determined, search profile patch first (if available), then global patch
+  const candidatePaths: string[] = targetPath
+    ? [targetPath]
+    : [profilePatchPath, globalPatchPath].filter((p): p is string => Boolean(p))
+
+  // Strip possible scope prefix for AST ID matching
+  const rawId = payload.id ? payload.id.replace(/^(profile|global):/, '') : ''
+
+  for (const candidatePath of candidatePaths) {
+    try {
+      const content = await fs.promises.readFile(candidatePath, 'utf8')
+      const doc = parseDocument(content)
+      const contents = doc.contents
+      let modified = false
+
+      if (isSeq(contents)) {
+        for (const item of contents.items) {
+          if (isMap(item)) {
+            const insertSeq = item.get('insert')
+            if (isSeq(insertSeq)) {
+              for (const pluginItem of insertSeq.items) {
+                if (isMap(pluginItem)) {
+                  const id = String(pluginItem.get('id') ?? '')
+                  const config = pluginItem.get('config')
+                  const serverName = isMap(config) ? String(config.get('serverName') ?? '') : ''
+                  if (
+                    (rawId && id === rawId) ||
+                    (payload.id && id === payload.id) ||
+                    (payload.serverName && (serverName === payload.serverName || id === payload.serverName))
+                  ) {
+                    if (payload.enabled) {
+                      // Activate: remove disabled property
+                      (pluginItem as any).delete('disabled')
+                    } else {
+                      // Deactivate: add disabled: true
+                      (pluginItem as any).set('disabled', true)
+                    }
+                    modified = true
+                    break
+                  }
                 }
-                modified = true
-                break
               }
             }
           }
+          if (modified) break
         }
       }
-      if (modified) break
+
+      if (modified) {
+        await fs.promises.writeFile(candidatePath, doc.toString(), 'utf8')
+        return true
+      }
+    } catch (err: any) {
+      if (err?.code !== 'ENOENT') {
+        throw err
+      }
     }
   }
 
-  if (modified) {
-    await fs.promises.writeFile(cordisPatchPath, doc.toString(), 'utf8')
-    return true
-  }
-  throw new Error(`MCP server not found in cordis.patch.yml: ${payload.id || payload.serverName}`)
+  throw new Error(`MCP server not found in allowed patch files: ${payload.id || payload.serverName}`)
 }
 
 /** Open a target file or folder in the host OS default file manager */
@@ -324,13 +405,14 @@ export function apply(ctx: Context): void {
   const connection = ctx.get('connection') as any
   const dshHome = process.env.DSH_HOME || path.join(os.homedir(), '.dsh')
   const agentsHome = process.env.DSH_AGENTS_HOME || path.join(os.homedir(), '.agents')
-  const cordisPatchPath = path.join(dshHome, 'cordis.patch.yml')
 
   if (connection && connection.rpc) {
     connection.rpc.handle(
       RPC_CHANNEL,
       async (endpoint: string, payload: any): Promise<RpcResult<any>> => {
         try {
+          const allowedPaths = getAllowedPatchPaths(ctx, dshHome)
+
           if (endpoint === 'list') {
             // Resolve project root
             let cwd = process.cwd()
@@ -374,8 +456,14 @@ export function apply(ctx: Context): void {
             ])
             const globalSkills = sortByEnabled([...globalDshSkills, ...globalAgentsSkills])
 
-            // 3. Global MCPs
-            const globalMcps = sortByEnabled(await readGlobalMcps(cordisPatchPath))
+            // 3. Profile & Global MCPs
+            const [profileMcps, globalPatchMcps] = await Promise.all([
+              allowedPaths.profilePatchPath
+                ? readMcpsFromFile(allowedPaths.profilePatchPath, 'profile')
+                : Promise.resolve([] as McpItem[]),
+              readMcpsFromFile(allowedPaths.globalPatchPath, 'global'),
+            ])
+            const globalMcps = sortByEnabled([...profileMcps, ...globalPatchMcps])
 
             const data: ManagerData = {
               projectRoot,
@@ -393,7 +481,7 @@ export function apply(ctx: Context): void {
           }
 
           if (endpoint === 'toggle-mcp') {
-            await toggleMcp(cordisPatchPath, payload as ToggleMcpPayload)
+            await toggleMcp(allowedPaths, payload as ToggleMcpPayload)
             return { ok: true, value: { enabled: payload.enabled } }
           }
 
