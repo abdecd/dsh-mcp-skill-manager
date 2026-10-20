@@ -6675,7 +6675,7 @@ function sortByEnabled(items) {
 //#endregion
 //#region src/index.ts
 const name = "mcp-skill-manager";
-const inject = ["connection"];
+const inject = ["connection", "webServer"];
 /** Walk up filesystem looking for .git or project markers */
 async function findProjectRoot(startDir) {
 	let current = path.resolve(startDir);

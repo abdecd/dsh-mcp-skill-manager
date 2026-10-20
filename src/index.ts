@@ -20,7 +20,8 @@ import {
 
 export { sortByEnabled } from './shared.ts'
 export const name = 'mcp-skill-manager'
-export const inject = ['connection']
+// RPC registration delegates to the Host web server through Connection.rpc.
+export const inject = ['connection', 'webServer']
 
 /** Walk up filesystem looking for .git or project markers */
 async function findProjectRoot(startDir: string): Promise<string> {

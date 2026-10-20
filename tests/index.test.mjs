@@ -8,7 +8,7 @@ import * as plugin from '../index.mjs'
 
 test('plugin exports Cordis contract', () => {
   assert.strictEqual(plugin.name, 'mcp-skill-manager')
-  assert.deepStrictEqual(plugin.inject, ['connection'])
+  assert.deepStrictEqual(plugin.inject, ['connection', 'webServer'])
   assert.strictEqual(typeof plugin.apply, 'function')
   assert.strictEqual(typeof plugin.sortByEnabled, 'function')
   assert.strictEqual(typeof plugin.getAllowedPatchPaths, 'function')
