@@ -21,7 +21,7 @@ export interface SkillItem {
   whenToUse?: string | undefined
 }
 
-export type McpScope = 'profile' | 'global'
+export type McpScope = 'project' | 'profile' | 'global'
 
 export interface McpItem {
   id: string
@@ -40,6 +40,7 @@ export interface ManagerData {
   projectRoot: string | null
   projectSkills: SkillItem[]
   globalSkills: SkillItem[]
+  projectMcps: McpItem[]
   globalMcps: McpItem[]
 }
 
@@ -49,6 +50,7 @@ export interface ToggleSkillPayload {
   filename: string
   isBundle: boolean
   enabled: boolean
+  sessionId?: string | undefined
 }
 
 export interface ToggleMcpPayload {
@@ -57,6 +59,7 @@ export interface ToggleMcpPayload {
   enabled: boolean
   scope?: McpScope | undefined
   configPath?: string | undefined
+  sessionId?: string | undefined
 }
 
 export interface OpenFolderPayload {
@@ -65,7 +68,7 @@ export interface OpenFolderPayload {
 
 export type RpcResult<T> =
   | { ok: true; value: T }
-  | { ok: false; error: { code: string; message: string } }
+  | { ok: false; error: { code: string; message: string; details: Record<string, any> } }
 
 /**
  * Sort items so that enabled items appear first, while preserving relative order (stable sort).
@@ -82,4 +85,3 @@ export function sortByEnabled<T extends { enabled: boolean }>(items: T[]): T[] {
   }
   return [...enabled, ...disabled]
 }
-

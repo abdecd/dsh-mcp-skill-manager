@@ -194,6 +194,7 @@ export function McpSkillPopover({
         filename: skill.filename,
         isBundle: skill.isBundle,
         enabled: nextState,
+        sessionId,
       })
 
       if (res && res.ok) {
@@ -248,16 +249,18 @@ export function McpSkillPopover({
         enabled: nextState,
         scope: mcp.scope,
         configPath: mcp.configPath,
+        sessionId,
       })
 
       if (res && res.ok) {
         setData((prev) => {
           if (!prev) return prev
+          const updater = (list: McpItem[] = []) =>
+            list.map((it) => (it.id === mcp.id ? { ...it, enabled: nextState } : it))
           return {
             ...prev,
-            globalMcps: prev.globalMcps.map((it) =>
-              it.id === mcp.id ? { ...it, enabled: nextState } : it,
-            ),
+            projectMcps: updater(prev.projectMcps),
+            globalMcps: updater(prev.globalMcps),
           }
         })
       } else {
@@ -298,6 +301,17 @@ export function McpSkillPopover({
     )
   }, [data, query])
 
+  const filteredProjectMcps = useMemo(() => {
+    if (!data || !data.projectMcps) return []
+    return data.projectMcps.filter(
+      (it) =>
+        !query ||
+        it.serverName.toLowerCase().includes(query) ||
+        it.id.toLowerCase().includes(query) ||
+        (it.command && it.command.toLowerCase().includes(query)),
+    )
+  }, [data, query])
+
   const filteredGlobalMcps = useMemo(() => {
     if (!data) return []
     return data.globalMcps.filter(
@@ -311,7 +325,8 @@ export function McpSkillPopover({
 
   const profileMcpCount = data ? data.globalMcps.filter((m) => m.scope === 'profile').length : 0
   const globalMcpOnlyCount = data ? data.globalMcps.filter((m) => m.scope === 'global').length : 0
-  const projectCount = (data ? data.projectSkills.length : 0) + profileMcpCount
+  const projectMcpCount = (data?.projectMcps?.length || 0) + profileMcpCount
+  const projectCount = (data ? data.projectSkills.length : 0) + projectMcpCount
   const globalCount = (data ? data.globalSkills.length : 0) + globalMcpOnlyCount
   const totalCount = projectCount + globalCount
 
@@ -322,6 +337,9 @@ export function McpSkillPopover({
     if (activeTab === 'all' || activeTab === 'project') {
       for (const skill of filteredProjectSkills) {
         list.push({ type: 'skill', item: skill })
+      }
+      for (const mcp of filteredProjectMcps) {
+        list.push({ type: 'mcp', item: mcp })
       }
       for (const mcp of filteredGlobalMcps) {
         if (mcp.scope === 'profile') {
@@ -350,7 +368,7 @@ export function McpSkillPopover({
       }
     }
     return [...enabled, ...disabled]
-  }, [activeTab, filteredProjectSkills, filteredGlobalMcps, filteredGlobalSkills])
+  }, [activeTab, filteredProjectSkills, filteredProjectMcps, filteredGlobalMcps, filteredGlobalSkills])
 
   const menuStyle: CSSProperties | undefined = portal
     ? {
@@ -534,10 +552,10 @@ export function McpSkillPopover({
                         </span>
                         <span
                           className={`${styles.itemBadge} ${
-                            mcp.scope === 'profile' ? styles.badgeProject : styles.badgeGlobal
+                            mcp.scope === 'project' || mcp.scope === 'profile' ? styles.badgeProject : styles.badgeGlobal
                           }`}
                         >
-                          {mcp.scope === 'profile' ? 'Profile' : '全局'}
+                          {mcp.scope === 'project' ? '项目' : mcp.scope === 'profile' ? 'Profile' : '全局'}
                         </span>
                       </div>
                       <div

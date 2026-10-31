@@ -776,3 +776,799 @@ test('isolated fixture: legacy toggle-mcp payload without scope or configPath se
     fs.rmSync(tmpRoot, { recursive: true, force: true })
   }
 })
+
+test('project-level MCP: scan and parse from .dsh/mcp.json with sorted status', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-project-mcp-scan-'))
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+  const projectRoot = path.join(tmpRoot, 'my-project')
+  const projectDsh = path.join(projectRoot, '.dsh')
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(projectDsh, { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    // Write .dsh/mcp.json with one disabled and one enabled
+    const mcpJson = {
+      mcpServers: {
+        'disabled-tool': {
+          command: 'node',
+          args: ['./scripts/disabled.js'],
+          disabled: true,
+        },
+        'active-tool': {
+          command: 'node',
+          args: ['./scripts/active.js'],
+          transport: 'stdio',
+        },
+      },
+    }
+    fs.writeFileSync(path.join(projectDsh, 'mcp.json'), JSON.stringify(mcpJson, null, 2), 'utf8')
+
+    let rpcHandler = null
+    const mockCtx = {
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return { list: () => [{ path: projectRoot }] }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+    assert.ok(typeof rpcHandler === 'function')
+
+    const res = await rpcHandler('list', {})
+    assert.strictEqual(res.ok, true)
+    assert.strictEqual(res.value.projectRoot, projectRoot)
+    assert.strictEqual(res.value.projectMcps.length, 2)
+
+    // Enabled item must be sorted first
+    assert.strictEqual(res.value.projectMcps[0].serverName, 'active-tool')
+    assert.strictEqual(res.value.projectMcps[0].enabled, true)
+    assert.strictEqual(res.value.projectMcps[0].scope, 'project')
+    assert.strictEqual(res.value.projectMcps[0].configPath, path.join(projectDsh, 'mcp.json'))
+
+    assert.strictEqual(res.value.projectMcps[1].serverName, 'disabled-tool')
+    assert.strictEqual(res.value.projectMcps[1].enabled, false)
+    assert.strictEqual(res.value.projectMcps[1].scope, 'project')
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('project-level MCP: toggle state writes disabled property and dynamic Cordis mount/unmount', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-project-mcp-toggle-'))
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+  const projectRoot = path.join(tmpRoot, 'my-project')
+  const projectDsh = path.join(projectRoot, '.dsh')
+  const mcpJsonPath = path.join(projectDsh, 'mcp.json')
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(projectDsh, { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    fs.writeFileSync(
+      mcpJsonPath,
+      JSON.stringify(
+        {
+          mcpServers: {
+            'hot-tool': {
+              command: 'node',
+              args: ['./hot.js'],
+            },
+          },
+        },
+        null,
+        2
+      ),
+      'utf8'
+    )
+
+    const mountedConfigs = []
+    const disposedForks = []
+    let rpcHandler = null
+
+    const fakePlugin = { name: '@deepseek-ai/dsh-mcp-client' }
+    const mockCtx = {
+      root: {
+        registry: {
+          get(name) {
+            if (name === '@deepseek-ai/dsh-mcp-client') return fakePlugin
+            return undefined
+          },
+        },
+      },
+      plugin(pluginTarget, config) {
+        mountedConfigs.push(config)
+        const fork = {
+          config,
+          dispose() {
+            disposedForks.push(config)
+          },
+        }
+        return fork
+      },
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return { list: () => [{ path: projectRoot }] }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+
+    // Initial list triggers mount of enabled hot-tool
+    const listRes = await rpcHandler('list', {})
+    assert.strictEqual(listRes.ok, true)
+    assert.strictEqual(mountedConfigs.length, 1)
+    assert.ok(mountedConfigs[0].serverName.startsWith('hot-tool-'))
+    assert.strictEqual(disposedForks.length, 0)
+
+    // 1. Toggle to disabled: true
+    const toggleOffRes = await rpcHandler('toggle-mcp', {
+      id: 'project:hot-tool',
+      serverName: 'hot-tool',
+      enabled: false,
+      scope: 'project',
+      configPath: mcpJsonPath,
+    })
+    assert.strictEqual(toggleOffRes.ok, true)
+
+    // Verify .dsh/mcp.json has disabled: true
+    const jsonAfterOff = JSON.parse(fs.readFileSync(mcpJsonPath, 'utf8'))
+    assert.strictEqual(jsonAfterOff.mcpServers['hot-tool'].disabled, true)
+
+    // Verify Cordis unmount was called
+    assert.strictEqual(disposedForks.length, 1)
+    assert.ok(disposedForks[0].serverName.startsWith('hot-tool-'))
+
+    // 2. Toggle back to enabled: true
+    const toggleOnRes = await rpcHandler('toggle-mcp', {
+      id: 'project:hot-tool',
+      serverName: 'hot-tool',
+      enabled: true,
+      scope: 'project',
+      configPath: mcpJsonPath,
+    })
+    assert.strictEqual(toggleOnRes.ok, true)
+
+    // Verify .dsh/mcp.json no longer has disabled
+    const jsonAfterOn = JSON.parse(fs.readFileSync(mcpJsonPath, 'utf8'))
+    assert.strictEqual(jsonAfterOn.mcpServers['hot-tool'].disabled, undefined)
+
+    // Verify Cordis mount was called again
+    assert.strictEqual(mountedConfigs.length, 2)
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('project-level MCP: security - rejects external malicious configPath', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-project-mcp-sec-'))
+  const projectRoot = path.join(tmpRoot, 'safe-project')
+  const externalDir = path.join(tmpRoot, 'external-dir')
+  const dshHome = path.join(tmpRoot, 'dsh-home')
+
+  try {
+    fs.mkdirSync(projectRoot, { recursive: true })
+    fs.mkdirSync(externalDir, { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    const evilJsonPath = path.join(externalDir, 'evil.json')
+    fs.writeFileSync(evilJsonPath, JSON.stringify({ mcpServers: { evil: { command: 'sh' } } }), 'utf8')
+
+    let rpcHandler = null
+    const mockCtx = {
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return { list: () => [{ path: projectRoot }] }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+
+    const attackRes = await rpcHandler('toggle-mcp', {
+      id: 'project:evil',
+      serverName: 'evil',
+      enabled: false,
+      scope: 'project',
+      configPath: evilJsonPath,
+    })
+
+    assert.strictEqual(attackRes.ok, false)
+    assert.ok(attackRes.error.message.includes('Forbidden') || attackRes.error.message.includes('Invalid request'))
+  } finally {
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('project-level MCP: supports root mcp.json fallback and open-folder target', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-project-mcp-root-'))
+  const projectRoot = path.join(tmpRoot, 'my-root-project')
+  const rootMcpJsonPath = path.join(projectRoot, 'mcp.json')
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(projectRoot, { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    fs.writeFileSync(
+      rootMcpJsonPath,
+      JSON.stringify({
+        mcpServers: {
+          'root-mcp-server': {
+            command: 'python3',
+            args: ['./server.py'],
+          },
+        },
+      }),
+      'utf8'
+    )
+
+    let rpcHandler = null
+    const mockCtx = {
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return { list: () => [{ path: projectRoot }] }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+    const res = await rpcHandler('list', {})
+    assert.strictEqual(res.ok, true)
+    assert.strictEqual(res.value.projectMcps.length, 1)
+    assert.strictEqual(res.value.projectMcps[0].serverName, 'root-mcp-server')
+    assert.strictEqual(res.value.projectMcps[0].configPath, rootMcpJsonPath)
+
+    // Open folder with configPath succeeds
+    const openRes = await rpcHandler('open-folder', { path: res.value.projectMcps[0].configPath })
+    assert.strictEqual(openRes.ok, true)
+    assert.strictEqual(openRes.value.opened, true)
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('agents convention: scans project-level .agents/mcp.json and global-level ~/.agents/mcp.json', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-agents-convention-'))
+  const dshHome = path.join(tmpRoot, 'user-dsh')
+  const agentsHome = path.join(tmpRoot, 'user-agents')
+  const projectRoot = path.join(tmpRoot, 'my-agents-project')
+  const projectAgentsDir = path.join(projectRoot, '.agents')
+
+  const previousDshHome = process.env.DSH_HOME
+  const previousAgentsHome = process.env.DSH_AGENTS_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    process.env.DSH_AGENTS_HOME = agentsHome
+
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    // 1. Create global ~/.agents/mcp.json
+    fs.mkdirSync(agentsHome, { recursive: true })
+    const globalAgentsMcpJson = {
+      mcpServers: {
+        'global-agent-tool': {
+          command: 'npx',
+          args: ['-y', 'global-agent-tool'],
+          disabled: false,
+        },
+      },
+    }
+    fs.writeFileSync(path.join(agentsHome, 'mcp.json'), JSON.stringify(globalAgentsMcpJson, null, 2), 'utf8')
+
+    // 2. Create project-level .agents/mcp.json
+    fs.mkdirSync(projectAgentsDir, { recursive: true })
+    const projectAgentsMcpJson = {
+      mcpServers: {
+        'project-agent-tool': {
+          command: 'python',
+          args: ['./tools/run.py'],
+          disabled: true,
+        },
+      },
+    }
+    fs.writeFileSync(path.join(projectAgentsDir, 'mcp.json'), JSON.stringify(projectAgentsMcpJson, null, 2), 'utf8')
+
+    let rpcHandler = null
+    const mockCtx = {
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return { list: () => [{ path: projectRoot }] }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+    const res = await rpcHandler('list', {})
+    assert.strictEqual(res.ok, true)
+
+    // Check project MCP from .agents/mcp.json
+    assert.strictEqual(res.value.projectMcps.length, 1)
+    const projItem = res.value.projectMcps[0]
+    assert.strictEqual(projItem.serverName, 'project-agent-tool')
+    assert.strictEqual(projItem.enabled, false)
+    assert.strictEqual(projItem.scope, 'project')
+    assert.strictEqual(projItem.configPath, path.join(projectAgentsDir, 'mcp.json'))
+
+    // Check global MCP from ~/.agents/mcp.json
+    const globItem = res.value.globalMcps.find((m) => m.serverName === 'global-agent-tool')
+    assert.ok(globItem, 'global-agent-tool should be found in globalMcps')
+    assert.strictEqual(globItem.enabled, true)
+    assert.strictEqual(globItem.scope, 'global')
+    assert.strictEqual(globItem.configPath, path.join(agentsHome, 'mcp.json'))
+
+    // 3. Toggle global MCP in ~/.agents/mcp.json
+    const toggleGlobalRes = await rpcHandler('toggle-mcp', {
+      id: globItem.id,
+      serverName: globItem.serverName,
+      enabled: false,
+      scope: 'global',
+      configPath: globItem.configPath,
+    })
+    assert.strictEqual(toggleGlobalRes.ok, true)
+    const updatedGlobalJson = JSON.parse(fs.readFileSync(path.join(agentsHome, 'mcp.json'), 'utf8'))
+    assert.strictEqual(updatedGlobalJson.mcpServers['global-agent-tool'].disabled, true)
+
+    // 4. Toggle project MCP in .agents/mcp.json
+    const toggleProjRes = await rpcHandler('toggle-mcp', {
+      id: projItem.id,
+      serverName: projItem.serverName,
+      enabled: true,
+      scope: 'project',
+      configPath: projItem.configPath,
+    })
+    assert.strictEqual(toggleProjRes.ok, true)
+    const updatedProjJson = JSON.parse(fs.readFileSync(path.join(projectAgentsDir, 'mcp.json'), 'utf8'))
+    assert.strictEqual(updatedProjJson.mcpServers['project-agent-tool'].disabled, undefined)
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    if (previousAgentsHome === undefined) delete process.env.DSH_AGENTS_HOME
+    else process.env.DSH_AGENTS_HOME = previousAgentsHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('runtime: resolveMcpClientPlugin safely resolves real or mocked mcp client without uninjected error', async () => {
+  const dummyCtx = { root: {} }
+  const pluginMod = await plugin.resolveMcpClientPlugin(dummyCtx)
+  assert.ok(pluginMod, 'Should resolve mcp client module')
+  assert.ok(typeof pluginMod.apply === 'function' || typeof pluginMod === 'function')
+})
+
+test('multi-project concurrency: projects run their MCPs independently without killing each other', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-proj-switch-'))
+  const projA = path.join(tmpRoot, 'project-a')
+  const projB = path.join(tmpRoot, 'project-b')
+  const projEmpty = path.join(tmpRoot, 'project-empty')
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(path.join(projA, '.agents'), { recursive: true })
+    fs.mkdirSync(path.join(projB, '.agents'), { recursive: true })
+    fs.mkdirSync(projEmpty, { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    // Project A has tool-a enabled
+    fs.writeFileSync(
+      path.join(projA, '.agents', 'mcp.json'),
+      JSON.stringify({ mcpServers: { 'tool-a': { command: 'node', args: ['./a.js'] } } }),
+      'utf8'
+    )
+
+    // Project B has tool-b enabled
+    fs.writeFileSync(
+      path.join(projB, '.agents', 'mcp.json'),
+      JSON.stringify({ mcpServers: { 'tool-b': { command: 'node', args: ['./b.js'] } } }),
+      'utf8'
+    )
+
+    const mounted = []
+    const disposed = []
+
+    const fakePlugin = { name: '@deepseek-ai/dsh-mcp-client' }
+
+    let rpcHandler = null
+    const mockCtx = {
+      root: {
+        registry: {
+          get(name) {
+            if (name === '@deepseek-ai/dsh-mcp-client') return fakePlugin
+            return undefined
+          },
+        },
+      },
+      plugin(pluginTarget, config) {
+        mounted.push({ server: config.serverName, cwd: config.cwd })
+        return {
+          config,
+          dispose() {
+            disposed.push({ server: config.serverName, cwd: config.cwd })
+          },
+        }
+      },
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return {
+            list: () => [
+              { path: projA, sessionIds: ['session-a'] },
+              { path: projB, sessionIds: ['session-b'] },
+              { path: projEmpty, sessionIds: ['session-empty'] },
+            ],
+          }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+
+    // 1. Visit Project A session: mounts tool-a only
+    const resA = await rpcHandler('list', { sessionId: 'session-a' })
+    assert.strictEqual(resA.ok, true)
+    assert.strictEqual(resA.value.projectRoot, projA)
+    assert.strictEqual(resA.value.projectMcps.length, 1)
+    assert.strictEqual(resA.value.projectMcps[0].serverName, 'tool-a')
+    assert.strictEqual(mounted.length, 1)
+    assert.ok(mounted[0].server.startsWith('tool-a-'))
+    assert.strictEqual(disposed.length, 0)
+
+    // 2. Visit Project B session: mounts tool-b; MUST NOT dispose tool-a from Project A!
+    const resB = await rpcHandler('list', { sessionId: 'session-b' })
+    assert.strictEqual(resB.ok, true)
+    assert.strictEqual(resB.value.projectRoot, projB)
+    assert.strictEqual(resB.value.projectMcps.length, 1)
+    assert.strictEqual(resB.value.projectMcps[0].serverName, 'tool-b')
+    // Both tool-a and tool-b remain active concurrently
+    assert.strictEqual(mounted.length, 2)
+    assert.ok(mounted[1].server.startsWith('tool-b-'))
+    assert.strictEqual(disposed.length, 0, 'Project A tools should NOT be killed when viewing Project B')
+
+    // 3. Visit Empty Project session: projectMcps is strictly empty, does not show tool-a or tool-b
+    const resEmpty = await rpcHandler('list', { sessionId: 'session-empty' })
+    assert.strictEqual(resEmpty.ok, true)
+    assert.strictEqual(resEmpty.value.projectRoot, projEmpty)
+    assert.deepStrictEqual(resEmpty.value.projectMcps, [], 'Empty project should have zero project MCPs')
+    assert.strictEqual(disposed.length, 0, 'No tools killed by merely opening empty project')
+
+    // 4. Toggle tool-a in Project A to disabled: only tool-a in Project A is disposed
+    const toggleA = await rpcHandler('toggle-mcp', {
+      id: 'project:tool-a',
+      serverName: 'tool-a',
+      enabled: false,
+      scope: 'project',
+      sessionId: 'session-a',
+      configPath: path.join(projA, '.agents', 'mcp.json'),
+    })
+    assert.strictEqual(toggleA.ok, true)
+    assert.strictEqual(disposed.length, 1)
+    assert.ok(disposed[0].server.startsWith('tool-a-'))
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('hash naming: appends project path hash to serverName to prevent collision between identical MCP names in different projects', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-hash-naming-'))
+  const projA = path.join(tmpRoot, 'project-a')
+  const projB = path.join(tmpRoot, 'project-b')
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(path.join(projA, '.agents'), { recursive: true })
+    fs.mkdirSync(path.join(projB, '.agents'), { recursive: true })
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(path.join(dshHome, 'cordis.patch.yml'), '- insert: []\n', 'utf8')
+
+    // Both projects configure an identical serverName: "kwin-mcp"
+    fs.writeFileSync(
+      path.join(projA, '.agents', 'mcp.json'),
+      JSON.stringify({ mcpServers: { 'kwin-mcp': { command: 'uvx', args: ['kwin-mcp'] } } }),
+      'utf8'
+    )
+    fs.writeFileSync(
+      path.join(projB, '.agents', 'mcp.json'),
+      JSON.stringify({ mcpServers: { 'kwin-mcp': { command: 'uvx', args: ['kwin-mcp'] } } }),
+      'utf8'
+    )
+
+    const mounted = []
+    const fakePlugin = { name: '@deepseek-ai/dsh-mcp-client' }
+
+    let rpcHandler = null
+    const mockCtx = {
+      root: {
+        registry: {
+          get(name) {
+            if (name === '@deepseek-ai/dsh-mcp-client') return fakePlugin
+            return undefined
+          },
+        },
+      },
+      plugin(pluginTarget, config) {
+        mounted.push({ serverName: config.serverName, cwd: config.cwd })
+        return { config, dispose() {} }
+      },
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        if (name === 'workspaceRegistry') {
+          return {
+            list: () => [
+              { path: projA, sessionIds: ['session-a'] },
+              { path: projB, sessionIds: ['session-b'] },
+            ],
+          }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+
+    // Mount Project A
+    await rpcHandler('list', { sessionId: 'session-a' })
+    assert.strictEqual(mounted.length, 1)
+
+    // Mount Project B (same serverName)
+    await rpcHandler('list', { sessionId: 'session-b' })
+    assert.strictEqual(mounted.length, 2)
+
+    // Both must be mounted, but with distinct scoped hash suffixes
+    assert.ok(mounted[0].serverName.startsWith('kwin-mcp-'))
+    assert.ok(mounted[1].serverName.startsWith('kwin-mcp-'))
+    assert.notStrictEqual(mounted[0].serverName, mounted[1].serverName, 'Server names must be distinct!')
+
+    // Both names must satisfy DSH length and pattern constraints
+    const dshPattern = /^[A-Za-z0-9_-]{1,32}$/
+    assert.ok(dshPattern.test(mounted[0].serverName))
+    assert.ok(dshPattern.test(mounted[1].serverName))
+    assert.ok(mounted[0].serverName.length <= 32)
+    assert.ok(mounted[1].serverName.length <= 32)
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+test('global MCP: turning off a global MCP immediately disposes its running fiber in Cordis', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-global-dispose-'))
+  const dshHome = path.join(tmpRoot, 'global-dsh')
+  const globalPatchPath = path.join(dshHome, 'cordis.patch.yml')
+
+  const previousDshHome = process.env.DSH_HOME
+
+  try {
+    process.env.DSH_HOME = dshHome
+    fs.mkdirSync(dshHome, { recursive: true })
+    fs.writeFileSync(
+      globalPatchPath,
+      `- insert:
+    - id: mcp-global-test
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: global-live-tool
+`,
+      'utf8'
+    )
+
+    let disposedCalled = false
+    const mockGlobalFiber = {
+      config: { serverName: 'global-live-tool' },
+      dispose() {
+        disposedCalled = true
+      },
+    }
+
+    const mockMcpClientRuntime = {
+      name: '@deepseek-ai/dsh-mcp-client',
+      fibers: [mockGlobalFiber],
+    }
+
+    let rpcHandler = null
+    const mockCtx = {
+      root: {
+        registry: {
+          values() {
+            return [mockMcpClientRuntime]
+          },
+        },
+      },
+      get(name) {
+        if (name === 'connection') {
+          return {
+            rpc: {
+              handle(channel, handler) {
+                if (channel === '/mcp-skill-manager') rpcHandler = handler
+              },
+            },
+          }
+        }
+        return undefined
+      },
+    }
+
+    plugin.apply(mockCtx)
+
+    // Toggle global MCP to disabled: false
+    const toggleRes = await rpcHandler('toggle-mcp', {
+      id: 'global:mcp-global-test',
+      serverName: 'global-live-tool',
+      enabled: false,
+      scope: 'global',
+      configPath: globalPatchPath,
+    })
+
+    assert.strictEqual(toggleRes.ok, true)
+    // Verify file written
+    const content = fs.readFileSync(globalPatchPath, 'utf8')
+    assert.ok(content.includes('disabled: true'))
+
+    // Verify active global fiber was immediately disposed!
+    assert.strictEqual(disposedCalled, true, 'Global fiber must be disposed when toggled off!')
+  } finally {
+    if (previousDshHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousDshHome
+    fs.rmSync(tmpRoot, { recursive: true, force: true })
+  }
+})
+
+
+test('session-level tool isolation: LLM assembly strictly filters out project MCP tools belonging to other projects', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'test-tool-filter-'))
+  const projA = path.join(tmpRoot, 'project-a')
+  const projB = path.join(tmpRoot, 'project-b')
+  const projEmpty = path.join(tmpRoot, 'project-empty')
+
+  fs.mkdirSync(projA, { recursive: true })
+  fs.mkdirSync(projB, { recursive: true })
+  fs.mkdirSync(projEmpty, { recursive: true })
+
+  const hashA = plugin.getProjectHash(projA)
+  const hashB = plugin.getProjectHash(projB)
+
+  let assembleHandler = null
+  const mockCtx = {
+    on(eventName, handler) {
+      if (eventName === 'system-prompt/assemble') assembleHandler = handler
+    },
+    get(name) {
+      if (name === 'connection') return { rpc: { handle() {} } }
+      return undefined
+    },
+  }
+
+  plugin.apply(mockCtx)
+  assert.ok(typeof assembleHandler === 'function')
+
+  const candidateTools = [
+    { name: 'global_bash', description: 'built-in' },
+    { name: `mcp__kwin-mcp-${hashA}__screenshot`, description: 'Proj A Tool' },
+    { name: `mcp__postgres-${hashB}__query`, description: 'Proj B Tool' },
+  ]
+
+  // 1. In Project A session: only global and Project A tools survive
+  const contextA = { agent: { session: { header: { cwd: projA } } } }
+  const resA = await assembleHandler({}, contextA, () => Promise.resolve({ tools: [...candidateTools] }))
+  assert.deepStrictEqual(
+    resA.tools.map((t) => t.name),
+    ['global_bash', `mcp__kwin-mcp-${hashA}__screenshot`],
+    'Project A session must NOT see Project B tools!'
+  )
+
+  // 2. In Project B session: only global and Project B tools survive
+  const contextB = { agent: { session: { header: { cwd: projB } } } }
+  const resB = await assembleHandler({}, contextB, () => Promise.resolve({ tools: [...candidateTools] }))
+  assert.deepStrictEqual(
+    resB.tools.map((t) => t.name),
+    ['global_bash', `mcp__postgres-${hashB}__query`],
+    'Project B session must NOT see Project A tools!'
+  )
+
+  // 3. In Empty Project session: all project tools are filtered out!
+  const contextEmpty = { agent: { session: { header: { cwd: projEmpty } } } }
+  const resEmpty = await assembleHandler({}, contextEmpty, () => Promise.resolve({ tools: [...candidateTools] }))
+  assert.deepStrictEqual(
+    resEmpty.tools.map((t) => t.name),
+    ['global_bash'],
+    'Empty project must NOT see any other project tools!'
+  )
+
+  fs.rmSync(tmpRoot, { recursive: true, force: true })
+})

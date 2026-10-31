@@ -40,6 +40,13 @@ export function McpSkillButton({ rpc, sessionId }: McpSkillButtonProps): ReactNo
     }
   }, [open])
 
+    // Auto-sync active project MCPs whenever sessionId changes, even if popover is closed!
+  useEffect(() => {
+    if (rpc && sessionId) {
+      rpc.call('/mcp-skill-manager', 'list', { sessionId }).catch(() => {})
+    }
+  }, [rpc, sessionId])
+
   const popover = open ? (
     <McpSkillPopover
       rpc={rpc}

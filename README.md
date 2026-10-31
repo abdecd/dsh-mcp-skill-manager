@@ -9,16 +9,46 @@ DeepSeek Harness (DSH) Web 插件：在输入框右侧（模型选择器左侧�
 - 🎯 **聊天框无缝集成**：挂载于聊天输入框右侧工具栏（`conversation.input.right`），紧邻模型选择器，随用随开。
 - ⚡ **即时生效的开关控制**：
   - **Skills 开关**：开启时位于 `skills` 目录，关闭时即时移入同级 `skills-disable` 目录，避开 DSH 检索规则，无需重启即刻启停。
-  - **MCP 开关**：直接读取并修改 `~/.dsh/cordis.patch.yml` 中的配置，添加或移除 `disabled: true` 属性。
+  - **MCP 开关**：
+    - **项目级 MCP**：自动探测当前项目中的 `.agents/mcp.json`、`.dsh/mcp.json` 或根目录 `mcp.json`。开启时通过 Cordis 动态挂载插件并拉起工具，关闭时置为 `disabled: true` 并调用 `fork.dispose()` 彻底销毁子进程与工具注册，**未激活时完全不污染 LLM 上下文**。
+    - **全局与 Profile 级 MCP**：支持用户级通用配置 `~/.agents/mcp.json` 与 DSH 补丁 `~/.dsh/cordis.patch.yml`，修改时即时落盘与切换 `disabled: true` 属性。
 - 📂 **点击直接打开对应文件夹**：
   - 点击列表中的任意 Skill，直接唤起系统默认文件管理器（macOS Finder / Windows 资源管理器 / Linux 文件管理器）打开该技能目录或所在文件夹。
-  - 点击任意 MCP 项，直接在文件管理器中打开其配置文件所在目录（`~/.dsh`）。
+  - 点击任意 MCP 项，直接在文件管理器中打开其配置文件所在目录（项目级打开当前项目目录，全局级打开 `~/.dsh`）。
   - 开关按钮带有防冒泡机制，切换状态不会误触打开文件夹。
 - 🔍 **分类与关键词检索**：支持按关键字即时过滤，并支持按全部 / Skills / MCP 分类筛选。
 - 📐 **与官方交互一致的 Popover 气泡**：贴合输入框自动计算弹出位置（上浮/下沉），无遮罩阻塞，支持点击外部区域或按下 `Esc` 键自动收起。
 - 层次清晰：严格优先展示**当前项目（Project）**资源，再展示**全局（Global）**资源。
 
 ---
+
+---
+
+## 🛠️ 项目级 MCP 配置规范
+
+支持通用 Agents 规范与 DSH 规范，优先推荐在项目根目录创建 `.agents/mcp.json`（同时也兼容 `.dsh/mcp.json` 或根目录 `mcp.json`）：
+
+```json
+{
+  "mcpServers": {
+    "project-db-tools": {
+      "command": "node",
+      "args": ["./scripts/db-mcp.js"],
+      "env": {
+        "DB_PORT": "5432"
+      }
+    },
+    "project-script": {
+      "command": "./bin/my-tool",
+      "disabled": true
+    }
+  }
+}
+```
+
+- **未激活时不挂载**：带有 `"disabled": true` 的服务在会话中不会拉起子进程，也不会将其工具暴露给模型上下文。
+- **UI 即时启停**：在 Web 界面点击开关即可即刻热重载，并自动回写持久化到 `mcp.json`。
+- **开箱即用**：与 Cursor、Roo Code、Claude Code 等生态的项目级配置格式保持一致。
 
 ## 📦 安装指南
 
